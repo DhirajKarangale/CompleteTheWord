@@ -6,11 +6,13 @@ public class Lobby : MonoBehaviourPunCallbacks
 {
     public static Lobby lobby;
 
+    [SerializeField] GameObject offlineText;
     [SerializeField] GameObject battelButton;
     [SerializeField] GameObject cancleButton;
 
     private void Awake()
     {
+        offlineText.SetActive(true);
         if (Lobby.lobby == null)
         {
             Lobby.lobby = this;
@@ -34,6 +36,7 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         base.OnConnectedToMaster();
         Debug.Log("Connected to Photon Server");
+        offlineText.SetActive(false);
         PhotonNetwork.AutomaticallySyncScene = true;
         battelButton.SetActive(true);
     }
@@ -84,6 +87,11 @@ public class Lobby : MonoBehaviourPunCallbacks
     private void StartGame()
     {
         PhotonNetwork.LoadLevel(1);
+    }
+
+    public void QuitButton()
+    {
+        Application.Quit();
     }
         
 }

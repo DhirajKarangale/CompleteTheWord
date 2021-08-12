@@ -9,9 +9,9 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SpwanPlayer();
+      SpwanPlayer();
     }
-
+       
     private void SpwanPlayer()
     {
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonNetworkPlayer"), spwanPoints[PhotonNetwork.PlayerList.Length-1].transform.position, spwanPoints[PhotonNetwork.PlayerList.Length-1].transform.rotation);
