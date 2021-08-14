@@ -13,10 +13,13 @@ public class GameManager : MonoBehaviour
     {
        SpwanPlayer();
     }
-       
+
     private void SpwanPlayer()
     {
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonNetworkPlayer"), spwanPoints[PhotonNetwork.PlayerList.Length-1].transform.position, spwanPoints[PhotonNetwork.PlayerList.Length-1].transform.rotation);
+        int spwanNumber;
+        if (PhotonNetwork.IsMasterClient) spwanNumber = 0;
+        else spwanNumber = 1;
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonNetworkPlayer"), spwanPoints[spwanNumber].transform.position, spwanPoints[spwanNumber].transform.rotation);
     }
 
     public void MenuButton()
