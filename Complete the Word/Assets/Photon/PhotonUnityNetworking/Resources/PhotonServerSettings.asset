@@ -41,6 +41,12 @@ MonoBehaviour:
   - RespawnSpaceship
   - OnCollisionStay
   - SetWord
+  - GameOver
+  - Move
+  - PlayerCollideABCCube
+  - PlayerExitABCCube
+  - PlayerExitWordCollision
+  - PlayreCollideWord
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

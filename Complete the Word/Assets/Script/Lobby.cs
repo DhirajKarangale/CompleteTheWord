@@ -1,31 +1,28 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Lobby : MonoBehaviourPunCallbacks
 {
     public static Lobby lobby;
-
+    [SerializeField] GameObject mainPanel, changeNamePanel;
     [SerializeField] GameObject offlineText;
     [SerializeField] GameObject battelButton;
     [SerializeField] GameObject cancleButton;
+    private string userName;
+    [SerializeField] Text userNameText;
 
     private void Awake()
     {
         offlineText.SetActive(true);
-        if (Lobby.lobby == null)
-        {
-            Lobby.lobby = this;
-        }
-        else
-        {
-            if (Lobby.lobby != this)
-            {
-                Destroy(Lobby.lobby.gameObject);
-                Lobby.lobby = this;
-            }
-        }
-        DontDestroyOnLoad(this.gameObject);
+        mainPanel.SetActive(true);
+        changeNamePanel.SetActive(false);
+        
+        userName = PlayerPrefs.GetString("UserName", "Player");
+        userNameText.text = userName;
+        PhotonNetwork.NickName = userName;
+        if (!PlayerPrefs.HasKey("UserName")) ChangeName();
 
         // Connecting To MasterPhoton
         PhotonNetwork.GameVersion = "0";
@@ -93,5 +90,25 @@ public class Lobby : MonoBehaviourPunCallbacks
     {
         Application.Quit();
     }
-        
+
+    public void ChangeName()
+    {
+        mainPanel.SetActive(false);
+        changeNamePanel.SetActive(true);
+    }
+
+    public void CloseChangeName()
+    {
+        mainPanel.SetActive(true);
+        changeNamePanel.SetActive(false);
+    }
+
+    public void EnterName(string name)
+    {
+        userName = name;
+        userNameText.text = userName;
+        PhotonNetwork.NickName = userName;
+        PlayerPrefs.SetString("UserName", userName);
+        PlayerPrefs.Save();
+    }
 }
