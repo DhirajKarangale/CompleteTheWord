@@ -14,10 +14,11 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     [SerializeField] Transform body;
     [SerializeField] float speed;
     private Joystick joystick;
+    [SerializeField] Animator animator;
 
     [Header("Camera Follow")]
     private Transform cam;
-    private Vector3 offset;
+    public Vector3 offset;
     private float smoothSpeed = 0.125f;
 
     [Header("Word")]
@@ -29,10 +30,11 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     public static bool isGameover;
     private bool isCollisionExit, isWordSet;
     private int level;
+    private string winnerName;
 
     [Header("UI")]
     [SerializeField] GameObject gameOverScreen;
-    [SerializeField] Text winnerName;
+    [SerializeField] Text winnerNameText;
     [SerializeField] Text playerLeftText;
     [SerializeField] Text goingToLobbyText;
     private float gointToLobbyTime;
@@ -44,11 +46,11 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
             level = PlayerPrefs.GetInt("Level", 0);
             currWord = words[level];
             photonView.RPC("SetWord", RpcTarget.AllBuffered, currWord);
-            offset = new Vector3(8, 5, 0);
+            offset = new Vector3(6, 2.5f, 0);
         }
         else
         {
-            offset = new Vector3(-8, 5, 0);
+            offset = new Vector3(-6, 2.5f, 0);
         }
     }
 
@@ -61,7 +63,6 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
         cam = FindObjectOfType<Camera>().transform;
         joystick = FindObjectOfType<Joystick>();
 
-        joystick.gameObject.SetActive(true);
         gameOverScreen.SetActive(false);
         isGameover = false;
         isCollisionExit = true;
@@ -81,12 +82,39 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
         if (!photonView.IsMine) return;
 
         // Input
-        float horrizantal = joystick.Horizontal();
-        float vertical = joystick.Vertical();
+        float horrizantal, vertical;
+        if (!isGameover)
+        {
+            horrizantal = joystick.Horizontal();
+            vertical = joystick.Vertical();
+        }
+        else
+        {
+            horrizantal = 0;
+            vertical = 0;
+        }
+
 
         // Move
         Vector3 direction = transform.right * horrizantal + transform.forward * vertical;
         rigidBody.velocity = direction * speed;
+
+        // Setting Animation
+        if (!isGameover)
+        {
+            if (rigidBody.velocity.magnitude > 0)
+            {
+                animator.SetBool("isRun", true);
+                animator.SetBool("isWin", false);
+                animator.SetBool("isLoose", false);
+            }
+            else
+            {
+                animator.SetBool("isRun", false);
+                animator.SetBool("isWin", false);
+                animator.SetBool("isLoose", false);
+            }
+        }
 
         // Look
         if (direction.magnitude >= 0.1)
@@ -105,15 +133,7 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
                 playerLeftText.text = PhotonNetwork.NickName + "(You) VS " + otherPlayerName; 
             }
         }
-       
-       /* if (isGameover)
-        {
-            if (gointToLobbyTime <= 0) MenuButton();
-            else gointToLobbyTime -= Time.deltaTime;
-            goingToLobbyText.text = "Going to Lobby in " + (int)gointToLobbyTime;
-            Debug.Log("Game Over In update to go to Lobby Time " + gointToLobbyTime);
-        }*/
-
+             
         // Setting Client Word
         if (!PhotonNetwork.IsMasterClient &&!isWordSet)
         {
@@ -198,6 +218,7 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
             wordCounter++;
             if (wordCounter == currWord.Length)
             {
+                if (photonView.IsMine) winnerName = photonView.Owner.NickName;
                 photonView.RPC("GameOver", RpcTarget.AllBuffered);
             }
         }
@@ -209,6 +230,7 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
             if (!photonView.IsMine) return;
             if (wordCounter == clientWord.Length)
             {
+                if (photonView.IsMine) winnerName = photonView.Owner.NickName;
                 photonView.RPC("GameOver", RpcTarget.AllBuffered);
             }
         }
@@ -226,12 +248,27 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     {
         playerLeftText.gameObject.SetActive(false);
         isGameover = true;
+
+        if(winnerName == photonView.Owner.NickName)
+        {
+            animator.SetBool("isRun", false);
+            animator.SetBool("isWin", true);
+            animator.SetBool("isLoose", false);
+        }
+        else
+        {
+            animator.SetBool("isRun", false);
+            animator.SetBool("isWin", false);
+            animator.SetBool("isLoose", true);
+        }
+
+        Invoke("SetWinnerScreenActive", 3);
+        winnerNameText.text = winnerName + " Won";
+    } 
+
+    private void SetWinnerScreenActive()
+    {
         gameOverScreen.SetActive(true);
-        if (photonView.IsMine) winnerName.text = PhotonNetwork.NickName + "(You) Won";
-        else winnerName.text = photonView.Owner.NickName + " Won\nYou Lose";
-       
-        if (!photonView.IsMine) return;
-        joystick.gameObject.SetActive(false);
     }
 
     public void MenuButton()

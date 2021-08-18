@@ -8,10 +8,23 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] Transform[] spwanPoints;
     [SerializeField] PhotonView photonView;
+    [SerializeField] GameObject gamePanel;
 
     private void Start()
     {
        SpwanPlayer();
+    }
+
+    private void Update()
+    {
+        if (Player.isGameover)
+        {
+            gamePanel.SetActive(false);
+        }
+        else
+        {
+            gamePanel.SetActive(true);
+        }
     }
 
     private void SpwanPlayer()
