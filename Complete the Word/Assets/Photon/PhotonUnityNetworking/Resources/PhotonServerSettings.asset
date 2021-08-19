@@ -47,6 +47,8 @@ MonoBehaviour:
   - PlayerExitABCCube
   - PlayerExitWordCollision
   - PlayreCollideWord
+  - SetWinnerName
+  - GameOverAnimation
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -1,29 +1,43 @@
 using UnityEngine;
 using Photon.Pun;
 using System.IO;
-using System.Collections;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
+public class GameManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] Transform[] spwanPoints;
-    [SerializeField] PhotonView photonView;
+
+    [SerializeField] GameObject gameOverScreen;
     [SerializeField] GameObject gamePanel;
+
+    [SerializeField] Text winnerNameText;
+    [SerializeField] Text playerNameText;
+    [SerializeField] Text goingToLobbyText;
+    private float gointToLobbyTime;
 
     private void Start()
     {
-       SpwanPlayer();
+        gointToLobbyTime = 30;
+        gameOverScreen.SetActive(false);
+        gamePanel.SetActive(true);
+
+        SpwanPlayer();
     }
 
     private void Update()
     {
         if (Player.isGameover)
         {
-            gamePanel.SetActive(false);
+            GameOver();
+
+            if (gointToLobbyTime <= 0) LeaveRoom();
+            else gointToLobbyTime -= Time.deltaTime;
+            goingToLobbyText.text = "Going to Lobby in " + (int)gointToLobbyTime;
         }
         else
         {
-            gamePanel.SetActive(true);
+            SetPlayerVsPlayer();
         }
     }
 
@@ -35,16 +49,59 @@ public class GameManager : MonoBehaviour
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonNetworkPlayer"), spwanPoints[spwanNumber].transform.position, spwanPoints[spwanNumber].transform.rotation);
     }
 
-    public void MenuButton()
+    private void GameOver()
     {
-        StartCoroutine(LeaveRoomGoMenu());
+        gamePanel.SetActive(false);
+        Invoke("SetGameOverScreenActive", 3);
+        winnerNameText.text = Player.winnerName + " Won";
     }
 
-    IEnumerator LeaveRoomGoMenu()
+    private void SetPlayerVsPlayer()
     {
-        PhotonNetwork.LeaveRoom();
-        while (PhotonNetwork.InRoom)
-            yield return null;
-        SceneManager.LoadScene(0);
+        string otherPlayerName;
+        if (PhotonNetwork.PlayerList.Length > 1)
+        {
+            if (PhotonNetwork.IsMasterClient) otherPlayerName = PhotonNetwork.PlayerList[1].NickName;
+            else otherPlayerName = PhotonNetwork.PlayerList[0].NickName;
+            playerNameText.text = PhotonNetwork.NickName + "(You) VS " + otherPlayerName;
+        }
     }
+
+    private void SetGameOverScreenActive()
+    {
+        gameOverScreen.SetActive(true);
+    }
+
+    public void LeaveRoom()
+    {
+        Player.IncreaseWordLevel();
+        PhotonNetwork.LeaveRoom();
+    }
+
+    public override void OnLeftRoom()
+    {
+        SceneManager.LoadScene(0);
+
+        base.OnLeftRoom();
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        if (Player.isGameover) LeaveRoom();
+        else
+        {
+            playerNameText.text = otherPlayer.NickName + " Left the Game";
+            if (!photonView.IsMine) Player.winnerName = photonView.Owner.NickName;
+            Invoke("GameOver", 2);
+        }
+        base.OnPlayerLeftRoom(otherPlayer);
+    }
+
+  /*  public override void OnDisconnected(DisconnectCause cause)
+    {
+        base.OnDisconnected(cause);
+        playerLeftText.gameObject.SetActive(true);
+        playerLeftText.text = "No Internet Going Back To Lobby";
+        MenuButton();
+    }*/
 }
