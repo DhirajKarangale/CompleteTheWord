@@ -1011,8 +1011,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 328776493}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -13.2, y: 2.5445, z: -0.8}
-  m_LocalScale: {x: 46.420002, y: 10.810103, z: 1}
+  m_LocalPosition: {x: -10.9, y: 2.5445, z: -0.8}
+  m_LocalScale: {x: 53.276234, y: 13.583571, z: 1}
   m_Children: []
   m_Father: {fileID: 1470911594}
   m_RootOrder: 2
@@ -1752,7 +1752,7 @@ Transform:
   m_GameObject: {fileID: 526368497}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.7556, y: 2.5445, z: 9.8}
-  m_LocalScale: {x: 34.771805, y: 4.6990604, z: 1}
+  m_LocalScale: {x: 80.4098, y: 13.018277, z: 1}
   m_Children: []
   m_Father: {fileID: 1470911594}
   m_RootOrder: 4
@@ -2322,7 +2322,7 @@ MonoBehaviour:
   m_ScaleFactor: 1
   m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 1
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -3064,7 +3064,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1199031753}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 5.69, y: 0.72, z: 1.33}
+  m_LocalPosition: {x: 8.65, y: 0.72, z: 0.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 551855790}
@@ -3764,7 +3764,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1395799406}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5445, z: 16.6}
+  m_LocalPosition: {x: 0, y: 2.5445, z: 12.7}
   m_LocalScale: {x: 57.072353, y: 19.223148, z: 1}
   m_Children: []
   m_Father: {fileID: 1470911594}
@@ -5431,8 +5431,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102020513}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5445, z: -15.21}
-  m_LocalScale: {x: 41.198, y: 12.187484, z: 1}
+  m_LocalPosition: {x: 0, y: 2.5445, z: -15}
+  m_LocalScale: {x: 55.47723, y: 14.709074, z: 1}
   m_Children: []
   m_Father: {fileID: 1470911594}
   m_RootOrder: 1
@@ -5474,7 +5474,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2117868720}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -5.66, y: 0.97, z: 0.95}
+  m_LocalPosition: {x: -8.91, y: 0.97, z: 0.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 551855790}
@@ -5505,8 +5505,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122886830}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 25.2, y: 2.5445, z: -0.8}
-  m_LocalScale: {x: 72.77407, y: 17.798124, z: 1}
+  m_LocalPosition: {x: 19.6, y: 2.5445, z: -0.8}
+  m_LocalScale: {x: 171.38293, y: 41.55684, z: 1}
   m_Children: []
   m_Father: {fileID: 1470911594}
   m_RootOrder: 3
@@ -5996,7 +5996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -6005,7 +6005,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 120
+    m_FontSize: 60
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1

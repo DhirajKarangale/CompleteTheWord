@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void GameOver()
     {
+        Player.isGameover = true;
         gamePanel.SetActive(false);
         Invoke("SetGameOverScreenActive", 3);
         winnerNameText.text = Player.winnerName + " Won";
@@ -91,7 +92,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         else
         {
             playerNameText.text = otherPlayer.NickName + " Left the Game";
-            if (!photonView.IsMine) Player.winnerName = photonView.Owner.NickName;
+            if (photonView.IsMine) Player.winnerName = photonView.Owner.NickName;
             Invoke("GameOver", 2);
         }
         base.OnPlayerLeftRoom(otherPlayer);

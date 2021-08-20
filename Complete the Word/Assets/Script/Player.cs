@@ -11,19 +11,19 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     [SerializeField] Rigidbody rigidBody;
     [SerializeField] Transform body;
     [SerializeField] float speed;
-    private Joystick joystick;
     [SerializeField] Animator animator;
+    private Joystick joystick;
     public static bool isGameover;
 
     [Header("Camera Follow")]
     private Transform cam;
-    public Vector3 offset;
+    private Vector3 offset;
     private float smoothSpeed = 0.125f;
 
     [Header("Word")]
     [SerializeField] Text[] texts;
     [SerializeField] Image[] wordBG;
-    private string masterWord, clientWord, currWord;
+    private string masterWord, clientWord;
     private static string[] words = { "Bad", "Good", "Nice", "Home", "Help", "Hard", "Easy", "Had", "Mad" };
     private int wordCounter = 0;
     private bool isCollisionExit, isWordSet;
@@ -65,7 +65,6 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     private void Update()
     {
         if (!photonView.IsMine) return;
-               
 
         if (isGameover) photonView.RPC("GameOver", RpcTarget.AllBuffered);
         Move();
@@ -85,9 +84,25 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (photonView.IsMine && collision.gameObject.CompareTag("ABC") && (wordCounter < currWord.Length) && isCollisionExit && (currWord[wordCounter].ToString().ToUpper() == collision.gameObject.transform.name))
+        if (!PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("PlayreCollideWord", RpcTarget.AllBuffered);
+            if (photonView.IsMine && collision.gameObject.CompareTag("ABC") && (wordCounter < clientWord.Length) && isCollisionExit)
+            {
+                if ((clientWord[wordCounter].ToString().ToUpper() == collision.gameObject.transform.name) && (wordCounter < clientWord.Length) && isCollisionExit)
+                {
+                    photonView.RPC("PlayreCollideWord", RpcTarget.AllBuffered);
+                }
+            }
+        }
+        else
+        {
+            if (photonView.IsMine && collision.gameObject.CompareTag("ABC") && (wordCounter < masterWord.Length) && isCollisionExit)
+            {
+                if ((masterWord[wordCounter].ToString().ToUpper() == collision.gameObject.transform.name) && (wordCounter < masterWord.Length) && isCollisionExit)
+                {
+                    photonView.RPC("PlayreCollideWord", RpcTarget.AllBuffered);
+                }
+            }
         }
     }
 
@@ -141,10 +156,6 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
 
     private void SetSimilarWord()
     {
-        // Set Word For Player
-        if (PhotonNetwork.IsMasterClient) currWord = masterWord;
-        else currWord = clientWord;
-
         // Setting Client Word
         if (!PhotonNetwork.IsMasterClient && !isWordSet)
         {
@@ -188,15 +199,32 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     [PunRPC]
     private void PlayreCollideWord()
     {
-        isCollisionExit = false;
-        wordBG[wordCounter].color = Color.green;
-        wordCounter++;
-        
-        if (wordCounter == currWord.Length)
+       
+        if (PhotonNetwork.IsMasterClient)
         {
-            if (photonView.IsMine) winnerName = photonView.Owner.NickName;
-           
-            isGameover = true;
+            isCollisionExit = false;
+            wordBG[wordCounter].color = Color.green;
+            wordCounter++;
+            if (!photonView.IsMine) return;
+            if (wordCounter == masterWord.Length)
+            {
+                Debug.Log("in master");
+                photonView.RPC("SetWinnerName", RpcTarget.AllBuffered);
+                photonView.RPC("SetGameOverTrue", RpcTarget.AllBuffered);
+            }
+        }
+        else
+        {
+            isCollisionExit = false;
+            wordBG[wordCounter].color = Color.green;
+            wordCounter++;
+            if (!photonView.IsMine) return;
+            if (wordCounter == clientWord.Length)
+            {
+                Debug.Log("in client");
+                photonView.RPC("SetWinnerName", RpcTarget.AllBuffered);
+                photonView.RPC("SetGameOverTrue", RpcTarget.AllBuffered);
+            }
         }
     }
 
@@ -210,6 +238,7 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     private void GameOver()
     {
         wordCanvas.SetActive(false);
+        if (!photonView.IsMine) return;
         if (winnerName == PlayerPrefs.GetString("UserName"))
         {
             animator.SetBool("isRun", false);
@@ -246,6 +275,17 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
         }
     }
 
+    [PunRPC]
+    private void SetGameOverTrue()
+    {
+        isGameover = true;
+    }
+
+    [PunRPC]
+    private void SetWinnerName()
+    {
+        winnerName = photonView.Owner.NickName;
+    }
 
 
 

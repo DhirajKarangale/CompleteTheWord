@@ -49,6 +49,7 @@ MonoBehaviour:
   - PlayreCollideWord
   - SetWinnerName
   - GameOverAnimation
+  - SetGameOverTrue
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
