@@ -1,5 +1,6 @@
 using UnityEngine;
 using Photon.Pun;
+using System.Collections;
 using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -76,7 +77,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void LeaveRoom()
     {
         Player.IncreaseWordLevel();
+        StartCoroutine(LeaveRoomGoMenu());
+    }
+  
+    IEnumerator LeaveRoomGoMenu()
+    {
         PhotonNetwork.LeaveRoom();
+        while (PhotonNetwork.InRoom)
+            yield return null;
+      //  SceneManager.LoadScene(0);
     }
 
     public override void OnLeftRoom()

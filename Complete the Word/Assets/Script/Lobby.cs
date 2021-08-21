@@ -128,7 +128,7 @@ public class Lobby : MonoBehaviourPunCallbacks,IInRoomCallbacks
     {
         base.OnDisconnected(cause);
         isJoiningRoom = false;
-        offlineText.SetActive(true);
+        if (offlineText != null) offlineText.SetActive(true);
         battelButton.SetActive(false);
         cancleButton.SetActive(false);
         PhotonNetwork.ConnectUsingSettings();

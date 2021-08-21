@@ -2,6 +2,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
@@ -374,7 +375,15 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     public void LeaveRoom()
     {
         IncreaseWordLevel();
+        StartCoroutine(LeaveRoomGoMenu());
+    }
+
+    IEnumerator LeaveRoomGoMenu()
+    {
         PhotonNetwork.LeaveRoom();
+        while (PhotonNetwork.InRoom)
+            yield return null;
+        //  SceneManager.LoadScene(0);
     }
 
     public override void OnLeftRoom()
