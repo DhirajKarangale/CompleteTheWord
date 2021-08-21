@@ -50,8 +50,9 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     {
         if (!photonView.IsMine)
         {
-            Destroy(camera.gameObject);
-            Destroy(this.gameObject);
+            camera.enabled = false;
+            this.enabled = false;
+
             return;
         }
 
