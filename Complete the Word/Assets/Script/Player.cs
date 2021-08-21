@@ -1,7 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using EasyJoystick;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -12,13 +11,16 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     [SerializeField] Transform body;
     [SerializeField] float speed;
     [SerializeField] Animator animator;
-    private Joystick joystick;
     public static bool isGameover;
 
-    [Header("Camera Follow")]
-    private Transform cam;
-    private Vector3 offset;
-    private float smoothSpeed = 0.125f;
+    [Header("Swipe")]
+    [SerializeField] Camera camera;
+    public float sensitivity;
+    private int leftFingerId, rightFingerId;
+    private float halfScreenWidth;
+    private Vector2 lookInput;
+    private Vector2 moveTouchStartPosition;
+    private Vector2 moveInput;
 
     [Header("Word")]
     [SerializeField] Text[] texts;
@@ -41,40 +43,79 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
             level = PlayerPrefs.GetInt("Level", 0);
             masterWord = words[level];
             photonView.RPC("SetWord", RpcTarget.AllBuffered, masterWord);
-            offset = new Vector3(9, 4.5f, 0);
-        }
-        else
-        {
-            offset = new Vector3(-9, 4.5f, 0);
         }
     }
 
     private void Start()
     {
-        if (!photonView.IsMine) return;
-      
-        cam = FindObjectOfType<Camera>().transform;
-        joystick = FindObjectOfType<Joystick>();
+        if (!photonView.IsMine)
+        {
+            Destroy(camera.gameObject);
+            Destroy(this.gameObject);
+            return;
+        }
 
         wordCanvas.SetActive(true);
         isGameover = false;
         isCollisionExit = true;
         isWordSet = false;
+
+        leftFingerId = -1;
+        rightFingerId = -1;
+        halfScreenWidth = Screen.width / 2;
     }
 
     private void Update()
     {
         if (!photonView.IsMine) return;
 
-        if (isGameover) photonView.RPC("GameOver", RpcTarget.AllBuffered);
-        Move();
-        SetSimilarWord();     
+        if (isGameover)
+        {
+            photonView.RPC("GameOver", RpcTarget.AllBuffered);
+        }
+        else
+        {
+            rigidBody.isKinematic = false;
+
+            GetTouchInput();
+
+            if (leftFingerId != -1)
+            {
+                // Ony move if the left finger is being tracked
+                Move();
+            }
+            else
+            {
+                rigidBody.velocity = Vector3.zero;
+            }
+
+            if (rightFingerId != -1)
+            {
+                // Ony look around if the right finger is being tracked
+                LookAround();
+            }
+
+            // Setting Animation
+            if (rigidBody.velocity.magnitude > 0.8f)
+            {
+                animator.SetBool("isRun", true);
+                animator.SetBool("isWin", false);
+                animator.SetBool("isLoose", false);
+            }
+            else
+            {
+                animator.SetBool("isRun", false);
+                animator.SetBool("isWin", false);
+                animator.SetBool("isLoose", false);
+            }
+        }
+        SetSimilarWord();
     }
 
     private void FixedUpdate()
     {
-        if (!photonView.IsMine) return;
-        CameraFollow();
+        /*if (!photonView.IsMine) return;
+        CameraFollow();*/
     }
 
     private void OnDestroy()
@@ -115,36 +156,79 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
 
 
 
-    private void Move()
+    private void GetTouchInput()
     {
-        if (isGameover) rigidBody.isKinematic = true;
-        else rigidBody.isKinematic = false;
-
-        // Input
-        float horrizantal = joystick.Horizontal();
-        float vertical = joystick.Vertical();
-
-        // Move
-        Vector3 direction = transform.right * horrizantal + transform.forward * vertical;
-        rigidBody.velocity = direction * speed;
-       
-
-        // Setting Animation
-        if (!isGameover)
+        // Iterate through all the detected touches
+        for (int i = 0; i < Input.touchCount; i++)
         {
-            if (rigidBody.velocity.magnitude > 0)
+
+            Touch t = Input.GetTouch(i);
+
+            // Check each touch's phase
+            switch (t.phase)
             {
-                animator.SetBool("isRun", true);
-                animator.SetBool("isWin", false);
-                animator.SetBool("isLoose", false);
-            }
-            else
-            {
-                animator.SetBool("isRun", false);
-                animator.SetBool("isWin", false);
-                animator.SetBool("isLoose", false);
+                case TouchPhase.Began:
+
+                    if (t.position.x < halfScreenWidth && leftFingerId == -1)
+                    {
+                        // Start tracking the left finger if it was not previously being tracked
+                        leftFingerId = t.fingerId;
+
+                        // Set the start position for the movement control finger
+                        moveTouchStartPosition = t.position;
+                    }
+                    else if (t.position.x > halfScreenWidth && rightFingerId == -1)
+                    {
+                        // Start tracking the rightfinger if it was not previously being tracked
+                        rightFingerId = t.fingerId;
+                    }
+
+                    break;
+                case TouchPhase.Ended:
+                case TouchPhase.Canceled:
+                    if (t.fingerId == leftFingerId)
+                    {
+                        // Stop tracking the left finger
+                        leftFingerId = -1;
+                    }
+                    else if (t.fingerId == rightFingerId)
+                    {
+                        // Stop tracking the right finger
+                        rightFingerId = -1;
+                    }
+
+                    break;
+                case TouchPhase.Moved:
+
+                    // Get input for looking around
+                    if (t.fingerId == rightFingerId)
+                    {
+                        lookInput = t.deltaPosition * sensitivity * Time.deltaTime;
+                    }
+                    else if (t.fingerId == leftFingerId)
+                    {
+
+                        // calculating the position delta from the start position
+                        moveInput = t.position - moveTouchStartPosition;
+                    }
+
+                    break;
+                case TouchPhase.Stationary:
+                    // Set the look input to zero if the finger is still
+                    if (t.fingerId == rightFingerId)
+                    {
+                        lookInput = Vector2.zero;
+                    }
+                    break;
             }
         }
+    }
+
+    private void Move()
+    {
+        // Move
+        Vector3 direction = transform.right * moveInput.x + transform.forward * moveInput.y;
+        rigidBody.velocity = direction * speed;
 
         // Look
         if (direction.magnitude >= 0.1)
@@ -152,6 +236,11 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             body.rotation = Quaternion.Euler(0, targetAngle, 0);
         }
+    }
+
+    private void LookAround()
+    {
+        transform.Rotate(Vector3.up * lookInput.x * sensitivity);
     }
 
     private void SetSimilarWord()
@@ -170,15 +259,6 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
                 }
             }
         }
-    }
-   
-    private void CameraFollow()
-    {
-        Vector3 desiredPos = transform.position + offset;
-        Vector3 smoothPos = Vector3.Lerp(cam.position, desiredPos, smoothSpeed);
-        cam.position = smoothPos;
-
-        cam.LookAt(transform);
     }
 
     public static void IncreaseWordLevel()
@@ -237,6 +317,7 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     [PunRPC]
     private void GameOver()
     {
+        rigidBody.isKinematic = true;
         wordCanvas.SetActive(false);
         if (!photonView.IsMine) return;
         if (winnerName == PlayerPrefs.GetString("UserName"))

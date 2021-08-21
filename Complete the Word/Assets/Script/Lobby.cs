@@ -69,7 +69,7 @@ public class Lobby : MonoBehaviourPunCallbacks,IInRoomCallbacks
     {
         isOtherPlayerLeave = false;
         isJoiningRoom = true;
-        delayStart = false;
+        delayStart = true;
         readyToCount = false;
         readyToStart = false;
         lessThanMaxPlayers = startingTime;

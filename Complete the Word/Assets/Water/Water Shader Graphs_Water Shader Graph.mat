@@ -41,13 +41,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - Collision_Offset: 0.1
     - Depth: 1
-    - Rippel_Density: 7
-    - Rippel_Slimnes: 5
+    - Rippel_Density: 10
+    - Rippel_Slimnes: 7
     - Ripple_Speed: 2
     - Strength: 2
+    - Wave_Speed: 0.1
     m_Colors:
     - Base_Color: {r: 0.01375042, g: 0.4094245, b: 0.9716981, a: 0}
+    - Collision_Color: {r: 0.3328632, g: 6.062866, b: 5.730002, a: 0}
     - DeepWater_Color: {r: 0.023985408, g: 0.35601655, b: 0.46226418, a: 0.6392157}
     - Ripple_Color: {r: 0.2431373, g: 1.921569, b: 2, a: 0}
     - ShallowWater_Color: {r: 0.41304737, g: 0.86240643, b: 0.9622642, a: 0.70980394}
