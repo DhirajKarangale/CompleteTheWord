@@ -14,6 +14,7 @@ public class Lobby : MonoBehaviourPunCallbacks,IInRoomCallbacks
     private string userName;
     [SerializeField] Text userNameText;
     [SerializeField] Text watingText;
+    [SerializeField] Text testerButtonText;
     private bool isJoiningRoom,isOtherPlayerLeave;
 
 
@@ -75,6 +76,11 @@ public class Lobby : MonoBehaviourPunCallbacks,IInRoomCallbacks
         lessThanMaxPlayers = startingTime;
         atMaxPlayer = 6;
         timeToStart = startingTime;
+
+        if (delayStart)
+        {
+            testerButtonText.text = "Player";
+        }
     }
 
     private void Update()
@@ -199,7 +205,7 @@ public class Lobby : MonoBehaviourPunCallbacks,IInRoomCallbacks
             {
                 readyToCount = true;
             }
-            if(playerInRoom == 2)
+            if(playerInRoom == 4)
             {
                 readyToStart = true;
                 if (!PhotonNetwork.IsMasterClient) return;
@@ -292,5 +298,19 @@ public class Lobby : MonoBehaviourPunCallbacks,IInRoomCallbacks
     private void LoadLobbyScene()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void TesterButton()
+    {
+        if (delayStart)
+        {
+            delayStart = false;
+            testerButtonText.text = "Tester";
+        }
+        else
+        {
+            delayStart = true;
+            testerButtonText.text = "Player";
+        }
     }
 }
