@@ -15,7 +15,7 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     public static bool isGameover;
 
     [Header("Swipe")]
-    [SerializeField] Camera camera;
+    [SerializeField] Camera cam;
     public float sensitivity;
     private int leftFingerId, rightFingerId;
     private float halfScreenWidth;
@@ -51,7 +51,7 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
     {
         if (!photonView.IsMine)
         {
-            camera.enabled = false;
+            cam.enabled = false;
             this.enabled = false;
 
             return;
