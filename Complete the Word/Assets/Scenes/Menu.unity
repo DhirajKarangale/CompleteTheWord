@@ -206,7 +206,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: BattelButton
         m_Mode: 1
@@ -484,7 +484,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: ChangeName
         m_Mode: 1
@@ -623,7 +623,7 @@ GameObject:
   m_Component:
   - component: {fileID: 683562861}
   - component: {fileID: 683562862}
-  - component: {fileID: 683562863}
+  - component: {fileID: 683562860}
   m_Layer: 0
   m_Name: LobbyControler
   m_TagString: Untagged
@@ -631,6 +631,29 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &683562860
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 683562859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 044f4b2e9d9a7744ebdacd2dd6fc4ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerListItemLobby: {fileID: 1464665720792091948, guid: 4328d633087d85a488d06b1d1d46c727, type: 3}
+  playerListContent: {fileID: 1089454593}
+  mainPanel: {fileID: 815956034}
+  changeNamePanel: {fileID: 1916762646}
+  playerJoinedPanel: {fileID: 1400589993}
+  battelButton: {fileID: 105609742}
+  cancelButton: {fileID: 1768050227}
+  startButton: {fileID: 1545035310}
+  msgTextMain: {fileID: 1964135677}
+  msgTextPlayerJoined: {fileID: 834408744}
+  playerNameMain: {fileID: 1244199855}
 --- !u!4 &683562861
 Transform:
   m_ObjectHideFlags: 0
@@ -667,29 +690,6 @@ MonoBehaviour:
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &683562863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 683562859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 044f4b2e9d9a7744ebdacd2dd6fc4ea3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerListItemLobby: {fileID: 1464665720792091948, guid: 4328d633087d85a488d06b1d1d46c727, type: 3}
-  playerListContent: {fileID: 1089454593}
-  mainPanel: {fileID: 815956034}
-  changeNamePanel: {fileID: 1916762646}
-  playerJoinedPanel: {fileID: 1400589993}
-  battelButton: {fileID: 105609742}
-  cancelButton: {fileID: 1768050227}
-  startButton: {fileID: 1545035310}
-  msgTextMain: {fileID: 1964135677}
-  msgTextPlayerJoined: {fileID: 834408744}
-  playerNameMain: {fileID: 1244199855}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1459,7 +1459,7 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: EnterName
         m_Mode: 0
@@ -1945,7 +1945,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: CancleButton
         m_Mode: 1
@@ -2237,7 +2237,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: StartGameButton
         m_Mode: 1
@@ -2528,7 +2528,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: CancleButton
         m_Mode: 1
@@ -2661,7 +2661,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: CloseChangeName
         m_Mode: 1
@@ -2794,7 +2794,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 683562863}
+      - m_Target: {fileID: 683562860}
         m_TargetAssemblyTypeName: LobbyController, Assembly-CSharp
         m_MethodName: QuitButton
         m_Mode: 1
