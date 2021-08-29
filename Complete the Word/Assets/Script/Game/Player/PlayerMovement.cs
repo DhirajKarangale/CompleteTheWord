@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         if (GameManager.isGameOver)
         {
             rigidBody.velocity = Vector3.zero;
-            photonView.RPC("GameOver", RpcTarget.All);
+            photonView.RPC("GameOverPlayerMovement", RpcTarget.All);
         }
         else
         {
@@ -72,7 +72,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     [PunRPC]
-    private void GameOver()
+    private void GameOverPlayerMovement()
     {
         if (!photonView.IsMine) return;
 

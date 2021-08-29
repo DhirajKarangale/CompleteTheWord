@@ -3,7 +3,6 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.IO;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -35,11 +34,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (isGameOver) GameOver();
     }
 
-    private void OnDestroy()
-    {
-       Word.IncreaseWordLevel();
-    }
-
     #endregion Unity
 
     #region Game
@@ -62,7 +56,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     
     public void LeaveRoom()
     {
-        Word.IncreaseWordLevel();
         StartCoroutine(LeaveRoomGoMenu());
     }
   
@@ -81,8 +74,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             playerNameText.text = otherPlayer.NickName + " Left the Game";
             if(PhotonNetwork.PlayerList.Length == 1)
             {
-                Word.winnerName = PlayerPrefs.GetString("UserName");
-                Invoke("GameOver", 1);
+                Word.winnerName = PhotonNetwork.NickName;
+                isGameOver = true;
             }
         }
     }

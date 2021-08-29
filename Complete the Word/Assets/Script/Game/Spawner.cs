@@ -13,6 +13,7 @@ public class Spawner : MonoBehaviourPunCallbacks
 
     private void SpwanPlayer()
     {
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonNetworkPlayer"), spwanPoints[Random.Range(0,spwanPoints.Length)].transform.position, spwanPoints[Random.Range(0, spwanPoints.Length)].transform.rotation);
+        int spwanPoint = Random.Range(0, spwanPoints.Length);
+        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonNetworkPlayer"), spwanPoints[spwanPoint].transform.position, spwanPoints[spwanPoint].transform.rotation);
     }
 }

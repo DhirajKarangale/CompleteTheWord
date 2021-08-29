@@ -62,11 +62,20 @@ public class LobbyController : MonoBehaviourPunCallbacks
         }
         PhotonNetwork.NickName = PlayerPrefs.GetString("UserName", "Player");
 
-        PhotonNetwork.ConnectUsingSettings();
+        if(!PhotonNetwork.IsConnected) PhotonNetwork.ConnectUsingSettings();
     }
 
     private void Update()
     {
+        if (!PhotonNetwork.IsConnected)
+        {
+            battelButton.SetActive(false);
+            cancelButton.SetActive(false);
+            msgTextMain.gameObject.SetActive(true);
+            msgTextMain.text = "Offline";
+            PhotonNetwork.ConnectUsingSettings();
+        }
+       
         if (PhotonNetwork.PlayerList.Length >= 4)
         {
             currTime = 10;
