@@ -1,6 +1,5 @@
 using Photon.Pun;
 using UnityEngine;
-using System.IO;
 
 public class Spawner : MonoBehaviourPunCallbacks
 {
@@ -14,6 +13,6 @@ public class Spawner : MonoBehaviourPunCallbacks
     private void SpwanPlayer()
     {
         int spwanPoint = Random.Range(0, spwanPoints.Length);
-        PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PhotonNetworkPlayer"), spwanPoints[spwanPoint].transform.position, spwanPoints[spwanPoint].transform.rotation);
+        PhotonNetwork.Instantiate("PlayerPrefab", spwanPoints[spwanPoint].transform.position, spwanPoints[spwanPoint].transform.rotation);
     }
 }

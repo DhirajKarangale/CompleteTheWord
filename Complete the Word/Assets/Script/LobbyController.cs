@@ -8,13 +8,8 @@ public class LobbyController : MonoBehaviourPunCallbacks
 {
     [Header("Room")]
     private byte maxPlayers = 4;
-    private float timeToStart = 5, currTime;
-    private bool isStartGame;
-
-    [Header("Player List")]
-    [SerializeField] PlayerListItemLobby playerListItemLobby;
-    private List<PlayerListItemLobby> playerNameLobbyList = new List<PlayerListItemLobby>();
-    [SerializeField] Transform playerListContent;
+    private float timeToStart = 30, currTime;
+    private bool isStartGameTimer;
 
     [Header("UI Panel")]
     [SerializeField] GameObject mainPanel;
@@ -24,7 +19,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
     [Header("UI Button")]
     [SerializeField] GameObject battelButton;
     [SerializeField] GameObject cancelButton;
-    [SerializeField] GameObject startButton;
 
     [Header("UI Text")]
     [SerializeField] Text msgTextMain;
@@ -36,16 +30,13 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        playerNameLobbyList.Clear();
-
-        isStartGame = false;
+        isStartGameTimer = false;
         currTime = timeToStart;
 
         changeNamePanel.SetActive(false);
         mainPanel.SetActive(true);
         playerJoinedPanel.SetActive(false);
 
-        startButton.SetActive(false);
         battelButton.SetActive(false);
         cancelButton.SetActive(false);
 
@@ -75,17 +66,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
             msgTextMain.text = "Offline";
             PhotonNetwork.ConnectUsingSettings();
         }
+
+        if (PhotonNetwork.PlayerList.Length >= 4) StartGame();
        
-        if (PhotonNetwork.PlayerList.Length >= 4)
-        {
-            currTime = 10;
-            StartGameButton();
-        }
-
-        if (PhotonNetwork.IsMasterClient) startButton.SetActive(true);
-        else startButton.SetActive(false);
-
-        if (isStartGame) photonView.RPC("StartgameTimer", RpcTarget.AllBuffered); 
+        if (isStartGameTimer) photonView.RPC("StartgameTimer", RpcTarget.AllBuffered); 
     }
 
     #endregion Unity
@@ -120,33 +104,9 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         mainPanel.SetActive(false);
         playerJoinedPanel.SetActive(true);
-       
-        GetCurrentRoomPlayer();
+        if (PhotonNetwork.IsMasterClient) isStartGameTimer = true;
     }
-
-    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
-    {
-        base.OnPlayerEnteredRoom(newPlayer);
-        msgTextPlayerJoined.gameObject.SetActive(true);
-        msgTextPlayerJoined.text = newPlayer.NickName + " Joined";
-        Invoke("SetMsgTextPlayerJoinToFalse", 2);
-        AddPlayerListing(newPlayer);
-    }
-
-    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
-    {
-        base.OnPlayerLeftRoom(otherPlayer);
-
-        photonView.RPC("PlayerLeftRoom", RpcTarget.All, otherPlayer.NickName);
-
-        int index = playerNameLobbyList.FindIndex(x => x.player == otherPlayer);
-        if (index != -1)
-        {
-            Destroy(playerNameLobbyList[index].gameObject);
-            playerNameLobbyList.RemoveAt(index);
-        }
-    }
-
+  
     #endregion Photon
 
 
@@ -159,27 +119,11 @@ public class LobbyController : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom("Room" + randomRoomNumber, roomOptions);
     }
 
-    private void SetMsgTextPlayerJoinToFalse()
+    private void StartGame()
     {
-        msgTextPlayerJoined.gameObject.SetActive(false);
-    }
-
-    private void GetCurrentRoomPlayer()
-    {
-        for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            AddPlayerListing(PhotonNetwork.PlayerList[i]);
-        }
-    }
-
-    private void AddPlayerListing(Photon.Realtime.Player player)
-    {
-        PlayerListItemLobby listing = Instantiate(playerListItemLobby, playerListContent);
-        if (listing != null)
-        {
-            listing.SetUp(player);
-            playerNameLobbyList.Add(listing);
-        }
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        PhotonNetwork.LoadLevel(1);
     }
 
     [PunRPC]
@@ -187,23 +131,15 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         if (currTime <= 0)
         {
-            PhotonNetwork.LoadLevel(1);
-            isStartGame = false;
+            StartGame();
+            isStartGameTimer = false;
         }
         else
         {
             currTime -= Time.deltaTime;
         }
         msgTextPlayerJoined.gameObject.SetActive(true);
-        msgTextPlayerJoined.text = "Match Start in\n" + (int)currTime;
-    }
-
-    [PunRPC]
-    private void PlayerLeftRoom(string playerName)
-    {
-        msgTextPlayerJoined.gameObject.SetActive(true);
-        msgTextPlayerJoined.text = playerName + " Left";
-        Invoke("SetMsgTextPlayerJoinToFalse", 2);
+        msgTextPlayerJoined.text = "Estimated time " + (int)currTime;
     }
 
     #endregion Game
@@ -223,28 +159,13 @@ public class LobbyController : MonoBehaviourPunCallbacks
         currTime = timeToStart;
 
         msgTextPlayerJoined.gameObject.SetActive(false);
-
-        for(int i = 0; i < PhotonNetwork.PlayerList.Length; i++)
-        {
-            if (playerNameLobbyList[i] != null) Destroy(playerNameLobbyList[i].gameObject);
-        }
-        playerNameLobbyList.Clear();
       
-        isStartGame = false;
+        isStartGameTimer = false;
         battelButton.SetActive(true);
         cancelButton.SetActive(false);
         PhotonNetwork.LeaveRoom();
         mainPanel.SetActive(true);
         playerJoinedPanel.SetActive(false);
-    }
-
-    public void StartGameButton()
-    {
-        if (!PhotonNetwork.IsMasterClient) return;
-
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        isStartGame = true;
     }
 
     public void QuitButton()
