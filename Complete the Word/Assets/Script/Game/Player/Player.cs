@@ -58,9 +58,9 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
         }
 
         wordCanvas.SetActive(true);
+        isWordSet = false;
         isGameover = false;
         isCollisionExit = true;
-        isWordSet = false;
 
         leftFingerId = -1;
         rightFingerId = -1;
@@ -112,12 +112,6 @@ public class Player : MonoBehaviourPunCallbacks, IInRoomCallbacks,IPunObservable
             }
         }
         SetSimilarWord();
-    }
-
-    private void FixedUpdate()
-    {
-        /*if (!photonView.IsMine) return;
-        CameraFollow();*/
     }
 
     private void OnDestroy()
