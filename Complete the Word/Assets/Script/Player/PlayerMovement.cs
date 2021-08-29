@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] PhotonView photonView;
+    [SerializeField] ParticleSystem winPS;
 
     [Header("Movement")]
     [SerializeField] Rigidbody rigidBody;
@@ -29,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
 
             return;
         }
-
+        winPS.Stop();
         leftFingerId = -1;
         rightFingerId = -1;
         halfScreenWidth = Screen.width / 2;
@@ -70,6 +71,10 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        winPS.Stop();
+    }
 
     [PunRPC]
     private void GameOverPlayerMovement()
@@ -81,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRun", false);
             animator.SetBool("isWin", true);
             animator.SetBool("isLoose", false);
+            winPS.Play();
         }
         else
         {

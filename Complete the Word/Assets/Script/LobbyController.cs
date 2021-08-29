@@ -2,19 +2,19 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class LobbyController : MonoBehaviourPunCallbacks
 {
     [Header("Room")]
     private byte maxPlayers = 4;
     private float timeToStart = 30, currTime;
-    private bool isStartGameTimer;
+    private bool isStartGame;
 
     [Header("UI Panel")]
     [SerializeField] GameObject mainPanel;
     [SerializeField] GameObject changeNamePanel;
     [SerializeField] GameObject playerJoinedPanel;
+    [SerializeField] GameObject loadingPanel;
 
     [Header("UI Button")]
     [SerializeField] GameObject battelButton;
@@ -30,7 +30,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        isStartGameTimer = false;
+        isStartGame = false;
         currTime = timeToStart;
 
         changeNamePanel.SetActive(false);
@@ -67,9 +67,9 @@ public class LobbyController : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings();
         }
 
-        if (PhotonNetwork.PlayerList.Length >= 4) StartGame();
+        if ((PhotonNetwork.PlayerList.Length >= 4) && isStartGame) StartGame();
        
-        if (isStartGameTimer) photonView.RPC("StartgameTimer", RpcTarget.AllBuffered); 
+        if (isStartGame) photonView.RPC("StartgameTimer", RpcTarget.AllBuffered); 
     }
 
     #endregion Unity
@@ -104,7 +104,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         mainPanel.SetActive(false);
         playerJoinedPanel.SetActive(true);
-        if (PhotonNetwork.IsMasterClient) isStartGameTimer = true;
+        if(PhotonNetwork.IsMasterClient) isStartGame = true;
     }
   
     #endregion Photon
@@ -123,7 +123,18 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel(1);
+        if(PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel(1);
+            isStartGame = false;
+        }
+        else
+        {
+            mainPanel.SetActive(false);
+            changeNamePanel.SetActive(false);
+            playerJoinedPanel.SetActive(false);
+            loadingPanel.SetActive(true);
+        }
     }
 
     [PunRPC]
@@ -132,7 +143,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
         if (currTime <= 0)
         {
             StartGame();
-            isStartGameTimer = false;
+            isStartGame = false;
         }
         else
         {
@@ -160,7 +171,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         msgTextPlayerJoined.gameObject.SetActive(false);
       
-        isStartGameTimer = false;
+        isStartGame = false;
         battelButton.SetActive(true);
         cancelButton.SetActive(false);
         PhotonNetwork.LeaveRoom();
