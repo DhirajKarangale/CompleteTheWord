@@ -11,6 +11,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform body;
     [SerializeField] Animator animator;
     [SerializeField] float speed;
+    [SerializeField] Transform checkSpherePos;
+    [SerializeField] float checkRadius;
+    [SerializeField] LayerMask ground;
+    [SerializeField] float jumpForce;
+    public bool isJump;
+    public float gravity;
 
     [Header("Look")]
     [SerializeField] Camera cam;
@@ -30,6 +36,8 @@ public class PlayerMovement : MonoBehaviour
 
             return;
         }
+
+        isJump = false;
         winPS.Stop();
         leftFingerId = -1;
         rightFingerId = -1;
@@ -39,6 +47,12 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         if (!photonView.IsMine) return;
+
+        if(!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground) && !isJump)
+        {
+            rigidBody.AddForce(Vector3.down * gravity, ForceMode.Impulse);
+        }
+        
 
         if (GameManager.isGameOver)
         {
@@ -69,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
+
     }
 
     private void OnDestroy()
@@ -181,5 +196,17 @@ public class PlayerMovement : MonoBehaviour
     private void LookAround()
     {
         transform.Rotate(Vector3.up * lookInput.x * sensitivity);
+    }
+
+    public void JumpButton()
+    {
+        isJump = true;
+        rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        Invoke("SetJumpFalse", 1);
+    }
+
+    private void SetJumpFalse()
+    {
+        isJump = false;
     }
 }
