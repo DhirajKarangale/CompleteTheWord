@@ -11,11 +11,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     [Header("Screen")]
     [SerializeField] GameObject gameOverScreen;
-    [SerializeField] GameObject gamePanel;
 
     [Header("Text")]
     [SerializeField] Text winnerNameText;
-    [SerializeField] Text playerNameText;
     [SerializeField] Text goingToLobbyText;
 
 
@@ -26,7 +24,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         isGameOver = false;
         gointToLobbyTime = 30;
         gameOverScreen.SetActive(false);
-        gamePanel.SetActive(true);
     }
 
     private void Update()
@@ -40,7 +37,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     private void GameOver()
     {
-        gamePanel.SetActive(false);
         Invoke("SetGameOverScreenActive", 2);
         winnerNameText.text = Word.winnerName + " Won";
 
@@ -65,19 +61,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         while (PhotonNetwork.InRoom)
             yield return null;
         SceneManager.LoadScene(0);
-    }
-
-    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
-    {
-        if (!isGameOver)
-        {
-            playerNameText.text = otherPlayer.NickName + " Left the Game";
-            if(PhotonNetwork.PlayerList.Length == 1)
-            {
-                Word.winnerName = PhotonNetwork.NickName;
-                isGameOver = true;
-            }
-        }
     }
 
     #endregion Game

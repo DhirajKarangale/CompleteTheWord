@@ -13,6 +13,8 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
     public static string winnerName;
 
     [Header("UI")]
+    [SerializeField] GameObject gamePanel;
+    [SerializeField] Text playerNameText;
     [SerializeField] Text[] texts;
     [SerializeField] Image[] wordBG;
     [SerializeField] GameObject wordCanvas;
@@ -38,6 +40,7 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
        
         wordCounter = 0;
         wordCanvas.SetActive(true);
+        gamePanel.SetActive(true);
         isCollisionExit = true;
     }
 
@@ -136,6 +139,7 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
     [PunRPC]
     private void GameOverWord()
     {
+        gamePanel.SetActive(false);
         wordCanvas.SetActive(false);
     }
 
@@ -159,6 +163,20 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
             }
         }
     }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        if (!GameManager.isGameOver)
+        {
+            playerNameText.text = otherPlayer.NickName + " Left the Game";
+            if (PhotonNetwork.PlayerList.Length == 1)
+            {
+                winnerName = PhotonNetwork.NickName;
+                GameManager.isGameOver = true;
+            }
+        }
+    }
+
 
     #endregion RPCPhoton
 }
