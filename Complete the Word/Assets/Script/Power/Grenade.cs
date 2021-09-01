@@ -19,11 +19,10 @@ public class Grenade : MonoBehaviour
     countDown -= Time.deltaTime;
      if(countDown<=0 && !isExplode) Explode();
   }
-     private void Explode()
+  private void Explode()
      {
         isExplode = true;
-           GameObject currentGranedeEffect = Instantiate(granideEffect,transform.position,transform.rotation);
-           Destroy(currentGranedeEffect,30f);
+        Destroy(Instantiate(granideEffect, transform.position, transform.rotation), 7);
 
            Collider[] colliderToMove =  Physics.OverlapSphere(transform.position,effectArea); // Finding the object near granide to move them.
            foreach (Collider nearByObject in colliderToMove)
@@ -36,6 +35,4 @@ public class Grenade : MonoBehaviour
            }
         Destroy(gameObject); 
      }
-
-    
 }
