@@ -5371,13 +5371,13 @@ MonoBehaviour:
   rigidBody: {fileID: 4818610174738261554}
   body: {fileID: 3365327530395591861}
   animator: {fileID: 2162079642655366998}
-  speed: 0.012
+  speed: 0.001
   checkSpherePos: {fileID: 78311760}
   checkRadius: 0.1
   ground:
     serializedVersion: 2
     m_Bits: 8
-  downForce: 10
+  jumpForce: 0
   cam: {fileID: 5641691432289702544}
   sensitivity: 3
 --- !u!114 &1199655290265053474
@@ -7915,8 +7915,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1199655290265053474}
+        m_TargetAssemblyTypeName: Word, Assembly-CSharp
         m_MethodName: LeaveRoom
         m_Mode: 1
         m_Arguments:

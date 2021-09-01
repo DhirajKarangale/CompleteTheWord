@@ -11,12 +11,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform body;
     [SerializeField] Animator animator;
     [SerializeField] float speed;
+
+    [Header("Jump")]
     [SerializeField] Transform checkSpherePos;
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask ground;
     [SerializeField] float jumpForce;
-    public bool isJump;
-    public float gravity;
 
     [Header("Look")]
     [SerializeField] Camera cam;
@@ -37,7 +37,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        isJump = false;
         winPS.Stop();
         leftFingerId = -1;
         rightFingerId = -1;
@@ -47,12 +46,6 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         if (!photonView.IsMine) return;
-
-        if(!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground) && !isJump)
-        {
-            rigidBody.AddForce(Vector3.down * gravity, ForceMode.Impulse);
-        }
-        
 
         if (GameManager.isGameOver)
         {
@@ -64,26 +57,34 @@ public class PlayerMovement : MonoBehaviour
             GetTouchInput();
 
             if (leftFingerId != -1) Move();
-            else rigidBody.velocity = Vector3.zero;
+           // else rigidBody.velocity = Vector3.zero;
 
             if (rightFingerId != -1) LookAround();
 
             // Setting Animation
-            if (rigidBody.velocity.magnitude > 0.8f)
+            if(!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+            {
+                animator.SetBool("isRun", false);
+                animator.SetBool("isWin", false);
+                animator.SetBool("isLoose", false);
+                animator.SetBool("isJump", true);
+                animator.Play("Jump", -1, 0);
+            }
+            else if ((rigidBody.velocity.magnitude != 0) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
             {
                 animator.SetBool("isRun", true);
                 animator.SetBool("isWin", false);
                 animator.SetBool("isLoose", false);
+                animator.SetBool("isJump", false);
             }
             else
             {
                 animator.SetBool("isRun", false);
                 animator.SetBool("isWin", false);
                 animator.SetBool("isLoose", false);
+                animator.SetBool("isJump", false);
             }
-
         }
-
     }
 
     private void OnDestroy()
@@ -101,6 +102,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRun", false);
             animator.SetBool("isWin", true);
             animator.SetBool("isLoose", false);
+            animator.SetBool("isJump", false);
             winPS.Play();
         }
         else
@@ -108,6 +110,7 @@ public class PlayerMovement : MonoBehaviour
             animator.SetBool("isRun", false);
             animator.SetBool("isWin", false);
             animator.SetBool("isLoose", true);
+            animator.SetBool("isJump", false);
         }
     }
   
@@ -183,7 +186,9 @@ public class PlayerMovement : MonoBehaviour
     {
         // Move
         Vector3 direction = transform.right * moveInput.x + transform.forward * moveInput.y;
-        rigidBody.velocity = direction * speed;
+        // rigidBody.velocity = direction * speed;
+        //  rigidBody.AddForce(direction * speed);
+        rigidBody.MovePosition(transform.position + direction * speed);
 
         // Rotate
         if (direction.magnitude >= 0.1)
@@ -200,13 +205,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void JumpButton()
     {
-        isJump = true;
-        rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        Invoke("SetJumpFalse", 1);
-    }
-
-    private void SetJumpFalse()
-    {
-        isJump = false;
+      if(Physics.CheckSphere(checkSpherePos.position,checkRadius,ground)) rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 }

@@ -1,6 +1,8 @@
 using UnityEngine.UI;
 using UnityEngine;
 using Photon.Pun;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Word : MonoBehaviourPunCallbacks ,IPunObservable
 {
@@ -179,4 +181,17 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
 
 
     #endregion RPCPhoton
+
+    public void LeaveRoom()
+    {
+        StartCoroutine(LeaveRoomGoMenu());
+    }
+
+    IEnumerator LeaveRoomGoMenu()
+    {
+        PhotonNetwork.LeaveRoom();
+        while (PhotonNetwork.InRoom)
+            yield return null;
+        SceneManager.LoadScene(0);
+    }
 }
