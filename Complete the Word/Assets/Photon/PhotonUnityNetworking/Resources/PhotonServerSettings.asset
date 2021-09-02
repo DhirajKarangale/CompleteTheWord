@@ -57,6 +57,17 @@ MonoBehaviour:
   - GameOverWord
   - GameOverPlayerMovement
   - StartGame
+  - Explode
+  - ThrowGranide
+  - HammerCollidePlayer
+  - HammerCollide
+  - PlayerSelectPanel
+  - PlayerSelect
+  - GranedePlayerSelectButtonRPC
+  - HammerPlayerSelectButtonRPC
+  - JumpPlayerSelectButtonRPC
+  - PlayerSelectButtonRPC
+  - SetRemainingPlayer
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

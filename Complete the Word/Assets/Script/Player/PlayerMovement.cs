@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField] PhotonView photonView;
+    public PhotonView photonView;
     [SerializeField] ParticleSystem winPS;
+    private int sleepTime = 10;
+    private bool isSleep;
 
     [Header("Movement")]
     [SerializeField] Rigidbody rigidBody;
@@ -31,6 +33,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!photonView.IsMine)
         {
+            gameObject.layer = 7;
             cam.enabled = false;
             this.enabled = false;
 
@@ -54,35 +57,44 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            GetTouchInput();
-
-            if (leftFingerId != -1) Move();
-           // else rigidBody.velocity = Vector3.zero;
-
-            if (rightFingerId != -1) LookAround();
-
-            // Setting Animation
-            if(!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+            if (!isSleep)
             {
-                animator.SetBool("isRun", false);
-                animator.SetBool("isWin", false);
-                animator.SetBool("isLoose", false);
-                animator.SetBool("isJump", true);
-                animator.Play("Jump", -1, 0);
-            }
-            else if ((rigidBody.velocity.magnitude != 0) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
-            {
-                animator.SetBool("isRun", true);
-                animator.SetBool("isWin", false);
-                animator.SetBool("isLoose", false);
-                animator.SetBool("isJump", false);
+                rigidBody.isKinematic = false;
+
+                GetTouchInput();
+
+                if (leftFingerId != -1) Move();
+                // else rigidBody.velocity = Vector3.zero;
+
+                if (rightFingerId != -1) LookAround();
+
+                // Setting Animation
+                if (!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+                {
+                    animator.SetBool("isRun", false);
+                    animator.SetBool("isWin", false);
+                    animator.SetBool("isLoose", false);
+                    animator.SetBool("isJump", true);
+                    animator.Play("Jump", -1, 0);
+                }
+                else if ((rigidBody.velocity.magnitude != 0) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+                {
+                    animator.SetBool("isRun", true);
+                    animator.SetBool("isWin", false);
+                    animator.SetBool("isLoose", false);
+                    animator.SetBool("isJump", false);
+                }
+                else
+                {
+                    animator.SetBool("isRun", false);
+                    animator.SetBool("isWin", false);
+                    animator.SetBool("isLoose", false);
+                    animator.SetBool("isJump", false);
+                }
             }
             else
             {
-                animator.SetBool("isRun", false);
-                animator.SetBool("isWin", false);
-                animator.SetBool("isLoose", false);
-                animator.SetBool("isJump", false);
+                rigidBody.isKinematic = true;
             }
         }
     }
@@ -206,5 +218,26 @@ public class PlayerMovement : MonoBehaviour
     public void JumpButton()
     {
       if(Physics.CheckSphere(checkSpherePos.position,checkRadius,ground)) rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
+
+    [PunRPC]
+    public void HammerCollide()
+    {
+        if (!photonView.IsMine) return;
+        if (isSleep) return;
+
+        isSleep = true;
+
+        animator.SetBool("isRun", false);
+        animator.SetBool("isWin", false);
+        animator.SetBool("isLoose", true);
+        animator.SetBool("isJump", false);
+
+        Invoke("SetSleepFalse", sleepTime);
+    }
+
+    private void SetSleepFalse()
+    {
+        isSleep = false;
     }
 }

@@ -1,24 +1,30 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class GrenadeThrow : MonoBehaviour
 {
-   [SerializeField] GameObject granedePrefab;
-   [SerializeField] float throwForce;
-   [SerializeField] float throwTime;
-   [SerializeField] Text timeCounterText;
-   private float currentThrowTime;
-   private bool isGranedeThrow;
+    [SerializeField] PhotonView photonView;
+    [SerializeField] GameObject granedePrefab;
+    [SerializeField] float throwForce;
+    [SerializeField] float throwTime;
+    [SerializeField] Text timeCounterText;
+    private float currentThrowTime;
+    private bool isGranedeThrow;
 
-   private void Start()
-   {
-       isGranedeThrow = false;
-       currentThrowTime = 0;
-       timeCounterText.gameObject.SetActive(false);
-   }
-   
-   private void Update()
-   {
+    private void Start()
+    {
+        if (!photonView.IsMine) return;
+
+        isGranedeThrow = false;
+        currentThrowTime = 0;
+        timeCounterText.gameObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        if (!photonView.IsMine) return;
+
         if (currentThrowTime > 0)
         {
             isGranedeThrow = false;
@@ -34,15 +40,21 @@ public class GrenadeThrow : MonoBehaviour
 
         if (isGranedeThrow && (currentThrowTime <= 0))
         {
-            currentThrowTime = throwTime;
-            isGranedeThrow = false;
-            GameObject granede = Instantiate(granedePrefab, transform.position, transform.rotation);
-            Rigidbody rigidbody = granede.GetComponent<Rigidbody>();
-            rigidbody.AddForce((transform.forward + transform.up) * throwForce, ForceMode.Impulse);
+            photonView.RPC("ThrowGranide", RpcTarget.All);
         }
-   }
+    }
 
-   public void GranedeThrowButton()
+    [PunRPC]
+    private void ThrowGranide()
+    {
+        currentThrowTime = throwTime;
+        isGranedeThrow = false;
+        GameObject granede = Instantiate(granedePrefab, transform.position, transform.rotation);
+        Rigidbody rigidbody = granede.GetComponent<Rigidbody>();
+        rigidbody.AddForce((transform.forward + transform.up) * throwForce, ForceMode.Impulse);
+    } 
+
+    public void GranedeThrowButton()
     {
         isGranedeThrow = true;
     }

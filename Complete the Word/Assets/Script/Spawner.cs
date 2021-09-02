@@ -12,6 +12,13 @@ public class Spawner : MonoBehaviourPunCallbacks
 
     private void SpwanPlayer()
     {
-        PhotonNetwork.Instantiate("PlayerPrefab", spwanPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.position, spwanPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.rotation);
+        string playerToSpwan;
+
+        if (LobbyController.selectedPlayer == 1) playerToSpwan = "PlayerPrefabHammer";
+        else if (LobbyController.selectedPlayer == 2) playerToSpwan = "PlayerPrefabBomb";
+        else if (LobbyController.selectedPlayer == 3) playerToSpwan = "PlayerPrefab";
+        else playerToSpwan = "PlayerPrefabJump";
+
+        PhotonNetwork.Instantiate(playerToSpwan, spwanPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.position, spwanPoints[PhotonNetwork.LocalPlayer.ActorNumber - 1].transform.rotation);
     }
 }
