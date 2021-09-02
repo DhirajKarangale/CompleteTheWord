@@ -4,15 +4,19 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public PhotonView photonView;
+    [SerializeField] GameObject gameCanvas;
     [SerializeField] ParticleSystem winPS;
+    [SerializeField] float effectArea;
+    [SerializeField] float explosionForce;
     private int sleepTime = 10;
     private bool isSleep;
 
     [Header("Movement")]
-    [SerializeField] Rigidbody rigidBody;
+    public Rigidbody rigidBody;
     [SerializeField] Transform body;
     [SerializeField] Animator animator;
     [SerializeField] float speed;
+    private Vector3 oldPos;
 
     [Header("Jump")]
     [SerializeField] Transform checkSpherePos;
@@ -36,14 +40,16 @@ public class PlayerMovement : MonoBehaviour
             gameObject.layer = 7;
             cam.enabled = false;
             this.enabled = false;
-
+            gameCanvas.SetActive(false);
             return;
         }
 
+        gameCanvas.SetActive(true);
         winPS.Stop();
         leftFingerId = -1;
         rightFingerId = -1;
         halfScreenWidth = Screen.width / 2;
+        oldPos = transform.position;
     }
 
     private void Update()
@@ -77,7 +83,7 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetBool("isJump", true);
                     animator.Play("Jump", -1, 0);
                 }
-                else if ((rigidBody.velocity.magnitude != 0) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+                else if ((oldPos == transform.position) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
                 {
                     animator.SetBool("isRun", true);
                     animator.SetBool("isWin", false);
@@ -201,6 +207,7 @@ public class PlayerMovement : MonoBehaviour
         // rigidBody.velocity = direction * speed;
         //  rigidBody.AddForce(direction * speed);
         rigidBody.MovePosition(transform.position + direction * speed);
+        oldPos = transform.position;
 
         // Rotate
         if (direction.magnitude >= 0.1)
@@ -217,6 +224,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void JumpButton()
     {
+      if (!photonView.IsMine) return;
+
       if(Physics.CheckSphere(checkSpherePos.position,checkRadius,ground)) rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
@@ -234,6 +243,15 @@ public class PlayerMovement : MonoBehaviour
         animator.SetBool("isJump", false);
 
         Invoke("SetSleepFalse", sleepTime);
+    }
+
+    [PunRPC]
+    private void AddExplosionForce()
+    {
+        if (!photonView.IsMine) return;
+        if (isSleep) return;
+
+        rigidBody.AddExplosionForce(explosionForce, transform.position + new Vector3(Random.Range(0,2),0,Random.Range(0,2)), effectArea);
     }
 
     private void SetSleepFalse()

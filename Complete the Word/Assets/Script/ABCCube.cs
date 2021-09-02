@@ -13,7 +13,7 @@ public class ABCCube : MonoBehaviour
         material.color = Color.white;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionStay(Collision collision)
     {
         photonView.RPC("PlayerCollideABCCube", RpcTarget.AllBuffered);
     }

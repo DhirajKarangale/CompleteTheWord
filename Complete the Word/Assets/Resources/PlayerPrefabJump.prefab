@@ -5374,7 +5374,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 7295820196180902589}
+  gameCanvas: {fileID: 1546007034374398508}
   winPS: {fileID: 643339977}
+  effectArea: 6
+  explosionForce: 110000
   rigidBody: {fileID: 4818610174738261554}
   body: {fileID: 3365327530395591861}
   animator: {fileID: 2162079642655366998}
@@ -5671,7 +5674,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5708457731356020394
 RectTransform:
   m_ObjectHideFlags: 0

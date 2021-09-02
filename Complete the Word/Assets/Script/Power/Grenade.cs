@@ -1,13 +1,13 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class Grenade : MonoBehaviour
+public class Grenade : MonoBehaviourPunCallbacks
 {
     [SerializeField] float delay;
     [SerializeField] float effectArea;
-    [SerializeField] float explosionForce;
     [SerializeField] GameObject granideEffect;
-    public float countDown;
-    public bool isExplode;
+    private float countDown;
+    private bool isExplode;
 
     private void Start()
     {
@@ -23,18 +23,14 @@ public class Grenade : MonoBehaviour
     private void Explode()
     {
         isExplode = true;
-        Destroy(Instantiate(granideEffect, transform.position, transform.rotation), 7);
+        Destroy(Instantiate(granideEffect, transform.position, transform.rotation), 5);
 
         Collider[] colliderToMove = Physics.OverlapSphere(transform.position, effectArea); // Finding the object near granide to move them.
         foreach (Collider nearByObject in colliderToMove)
         {
             if (nearByObject.gameObject.layer == 7)
             {
-                Rigidbody rb = nearByObject.GetComponent<Rigidbody>();
-                if (rb != null)
-                {
-                    rb.AddExplosionForce(explosionForce, transform.position, effectArea); // Adding force to object
-                }
+                nearByObject.gameObject.GetComponent<PlayerMovement>().photonView.RPC("AddExplosionForce", RpcTarget.All);
             }
         }
         Destroy(gameObject);

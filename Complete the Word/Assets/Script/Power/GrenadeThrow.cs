@@ -6,6 +6,7 @@ public class GrenadeThrow : MonoBehaviour
 {
     [SerializeField] PhotonView photonView;
     [SerializeField] GameObject granedePrefab;
+    [SerializeField] Transform player;
     [SerializeField] float throwForce;
     [SerializeField] float throwTime;
     [SerializeField] Text timeCounterText;
@@ -51,11 +52,13 @@ public class GrenadeThrow : MonoBehaviour
         isGranedeThrow = false;
         GameObject granede = Instantiate(granedePrefab, transform.position, transform.rotation);
         Rigidbody rigidbody = granede.GetComponent<Rigidbody>();
-        rigidbody.AddForce((transform.forward + transform.up) * throwForce, ForceMode.Impulse);
+        rigidbody.AddForce(player.transform.TransformDirection(Vector3.forward) * throwForce, ForceMode.Impulse);
     } 
 
     public void GranedeThrowButton()
     {
+        if (!photonView.IsMine) return;
+
         isGranedeThrow = true;
     }
 }

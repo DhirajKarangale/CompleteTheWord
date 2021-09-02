@@ -7,10 +7,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
 {
     [Header("Room")]
     private byte maxPlayers = 4;
-    private float timeToWait = 5, currTimeToWaitplayer, currTimetoStartMatch;
+    private float timeToWait = 5;
+    private float currTimeToWaitplayer, currTimetoStartMatch;
     private bool isStartGame;
     public static int selectedPlayer;
-    private int selectedButton;
 
     [Header("UI Panel")]
     [SerializeField] GameObject mainPanel;
@@ -62,7 +62,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
         }
         PhotonNetwork.NickName = PlayerPrefs.GetString("UserName", "Player");
 
-        if(!PhotonNetwork.IsConnected) PhotonNetwork.ConnectUsingSettings();
+        if (!PhotonNetwork.IsConnected) PhotonNetwork.ConnectUsingSettings();
     }
 
     private void Update()
@@ -79,13 +79,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
         if (PhotonNetwork.PlayerList.Length >= 4) StartGame();
 
         if (isStartGame) photonView.RPC("StartgameTimer", RpcTarget.AllBuffered);
-
-        for (int i = 0; i < playerSelectButtons.Length; i++)
-        {
-            if (!playerSelectButtons[i].interactable) selectedButton++;
-            if ((selectedButton == 3) && (selectedPlayer == 0)) photonView.RPC("SetRemainingPlayer", RpcTarget.AllBuffered);
-            break;
-        }
     }
 
     #endregion Unity
@@ -107,7 +100,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
         base.OnJoinRandomFailed(returnCode, message);
         CreateRoom();
     }
-   
+
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         base.OnCreateRoomFailed(returnCode, message);
@@ -120,9 +113,15 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
         mainPanel.SetActive(false);
         playerJoinedPanel.SetActive(true);
-        if(PhotonNetwork.IsMasterClient) isStartGame = true;
+        if (PhotonNetwork.IsMasterClient) isStartGame = true;
     }
-  
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        if (PhotonNetwork.PlayerList.Length == 1) CancleButton();
+    }
+
     #endregion Photon
 
 
@@ -141,7 +140,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
         PhotonNetwork.CurrentRoom.IsVisible = false;
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("PlayerSelectPanel", RpcTarget.AllBuffered);
+            photonView.RPC("PlayerSelectTimer", RpcTarget.AllBuffered);
         }
         else
         {
@@ -149,33 +148,32 @@ public class LobbyController : MonoBehaviourPunCallbacks
             changeNamePanel.SetActive(false);
             playerJoinedPanel.SetActive(false);
             loadingPanel.SetActive(true);
+            playerSelectPanel.SetActive(false);
         }
     }
 
-    [PunRPC]
     private void PlayerSelectPanel()
     {
-        mainPanel.SetActive(false);
-        changeNamePanel.SetActive(false);
-        loadingPanel.SetActive(false);
-        playerJoinedPanel.SetActive(false);
-        playerSelectPanel.SetActive(true);
+        if (selectedPlayer == 0) photonView.RPC("SetRemainingPlayer", RpcTarget.AllBuffered);
 
-        if (currTimetoStartMatch <= 0)
+        if (PhotonNetwork.IsMasterClient)
         {
-            if (selectedPlayer == 0) photonView.RPC("SetRemainingPlayer", RpcTarget.AllBuffered);
             PhotonNetwork.LoadLevel(1);
             isStartGame = false;
         }
-        else currTimetoStartMatch -= Time.deltaTime;
-
-        msgTextPlayerSelect.text = "Match Start in " + (int)currTimetoStartMatch;
+        else
+        {
+            mainPanel.SetActive(false);
+            changeNamePanel.SetActive(false);
+            playerJoinedPanel.SetActive(false);
+            loadingPanel.SetActive(true);
+            playerSelectPanel.SetActive(false);
+        }
     }
 
     [PunRPC]
     private void HammerPlayerSelectButtonRPC()
     {
-        selectedPlayer = 1;
         playerSelectButtonText[0].text = "Selected";
         playerSelectButtons[0].interactable = false;
     }
@@ -183,7 +181,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
     [PunRPC]
     private void GranedePlayerSelectButtonRPC()
     {
-        selectedPlayer = 2;
         playerSelectButtonText[1].text = "Selected";
         playerSelectButtons[1].interactable = false;
     }
@@ -191,7 +188,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
     [PunRPC]
     private void PlayerSelectButtonRPC()
     {
-        selectedPlayer = 3;
         playerSelectButtonText[2].text = "Selected";
         playerSelectButtons[2].interactable = false;
     }
@@ -199,7 +195,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
     [PunRPC]
     private void JumpPlayerSelectButtonRPC()
     {
-        selectedPlayer = 4;
         playerSelectButtonText[3].text = "Selected";
         playerSelectButtons[3].interactable = false;
     }
@@ -207,7 +202,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     [PunRPC]
     private void SetRemainingPlayer()
     {
-        for(int i = 0; i < playerSelectButtons.Length; i++)
+        for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             if (playerSelectButtons[i].interactable)
             {
@@ -231,6 +226,22 @@ public class LobbyController : MonoBehaviourPunCallbacks
         msgTextPlayerJoined.text = "Estimated time " + (int)currTimeToWaitplayer;
     }
 
+    [PunRPC]
+    private void PlayerSelectTimer()
+    {
+        mainPanel.SetActive(false);
+        changeNamePanel.SetActive(false);
+        loadingPanel.SetActive(false);
+        playerJoinedPanel.SetActive(false);
+        playerSelectPanel.SetActive(true);
+
+        if (currTimetoStartMatch <= 0) PlayerSelectPanel();
+        else currTimetoStartMatch -= Time.deltaTime;
+
+        msgTextPlayerSelect.gameObject.SetActive(true);
+        msgTextPlayerSelect.text = "Estimated time " + (int)currTimetoStartMatch;
+    }
+
     #endregion Game
 
 
@@ -248,7 +259,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
         currTimeToWaitplayer = timeToWait;
 
         msgTextPlayerJoined.gameObject.SetActive(false);
-      
+
         isStartGame = false;
         battelButton.SetActive(true);
         cancelButton.SetActive(false);
@@ -285,16 +296,19 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     public void HammerPlayerSelectButton()
     {
+        selectedPlayer = 1;
         photonView.RPC("HammerPlayerSelectButtonRPC", RpcTarget.AllBuffered);
-        for(int i = 0; i < playerSelectButtons.Length; i++)
+       
+        for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;
         }
-
     }
     public void GranedePlayerSelectButton()
     {
+        selectedPlayer = 2;
         photonView.RPC("GranedePlayerSelectButtonRPC", RpcTarget.AllBuffered);
+       
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;
@@ -302,7 +316,9 @@ public class LobbyController : MonoBehaviourPunCallbacks
     }
     public void PlayerSelectButton()
     {
+        selectedPlayer = 3;
         photonView.RPC("PlayerSelectButtonRPC", RpcTarget.AllBuffered);
+     
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;
@@ -310,7 +326,9 @@ public class LobbyController : MonoBehaviourPunCallbacks
     }
     public void JumpPlayerSelectButton()
     {
+        selectedPlayer = 4;
         photonView.RPC("JumpPlayerSelectButtonRPC", RpcTarget.AllBuffered);
+       
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;

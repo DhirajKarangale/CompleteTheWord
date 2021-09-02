@@ -150,7 +150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1919433372
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1536,7 +1536,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
-  m_SynchronizeScale: 0
+  m_SynchronizeScale: 1
   m_UseLocal: 1
 --- !u!114 &6793823885661715641
 MonoBehaviour:
@@ -1576,12 +1576,14 @@ MonoBehaviour:
   photonView: {fileID: 6793823885661715641}
   rigidBody: {fileID: 3377200859383563782}
   cam: {fileID: 868972524797455315}
+  boxCollider: {fileID: 3377200859383563783}
+  player: {fileID: 7849895166575648246}
   container: {fileID: 3377200858098780198}
   curvePoint: {fileID: 3377200859882231031}
   hammerThrow: {fileID: 21300000, guid: 58d16747776f5df4585a6c9b94652f2f, type: 3}
   hammerCatch: {fileID: 21300000, guid: 482a6986d72e355489bdf5fc3fc06648, type: 3}
   hammerThrowCatchButton: {fileID: 992209219}
-  throwForce: 30
+  throwForce: 25
 --- !u!1 &3377200859609083528
 GameObject:
   m_ObjectHideFlags: 0
@@ -7487,8 +7489,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5972456720150351970}
   serializedVersion: 2
-  m_Mass: 2
-  m_Drag: 0
+  m_Mass: 50
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -7562,7 +7564,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 2845026260732984318}
+  gameCanvas: {fileID: 1919433371}
   winPS: {fileID: 4775053238955601802}
+  effectArea: 6
+  explosionForce: 110000
   rigidBody: {fileID: 43701136502628209}
   body: {fileID: 7849895166575648246}
   animator: {fileID: 6648819818634798613}
@@ -8441,8 +8446,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8007968706303037471}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.508, y: 3.4512002, z: 1.36}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalPosition: {x: -8.508, y: -0.288, z: 1.36}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7947269606331538992}
   m_RootOrder: 5

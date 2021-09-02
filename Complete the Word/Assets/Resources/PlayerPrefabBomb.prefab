@@ -1339,13 +1339,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5028335724681795811}
-  m_LocalRotation: {x: 0.645722, y: 0.29477865, z: 0.4498167, w: 0.5420458}
-  m_LocalPosition: {x: 0.115, y: -0.024, z: -0.108}
-  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.122, y: -0.012, z: -0.081}
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
   m_Children: []
   m_Father: {fileID: 7738804810125297027}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 25.774, y: 90.49, z: 105.364}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &8731414845920890364
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1410,7 +1410,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   photonView: {fileID: 1751071716}
   granedePrefab: {fileID: 1730830273145113863, guid: 49acacadc8846af4084f889075865fbb, type: 3}
-  throwForce: 10
+  player: {fileID: 4747807312964376384}
+  throwForce: 22
   throwTime: 7
   timeCounterText: {fileID: 6598978660928641792}
 --- !u!114 &1751071716
@@ -7746,7 +7747,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2337111025068997983
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8227,7 +8228,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 749963446100422984}
+  gameCanvas: {fileID: 8800903537866838489}
   winPS: {fileID: 8023041891810714940}
+  effectArea: 6
+  explosionForce: 110000
   rigidBody: {fileID: 3281072968430998983}
   body: {fileID: 4747807312964376384}
   animator: {fileID: 8166906208939125923}
@@ -8237,7 +8241,7 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 8
-  jumpForce: 500
+  jumpForce: 0
   cam: {fileID: 2385995624011145573}
   sensitivity: 3
 --- !u!114 &9219319473084209879
