@@ -7,7 +7,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
 {
     [Header("Room")]
     private byte maxPlayers = 4;
-    private float timeToWait = 30, currTimeToWaitplayer, currTimetoStartMatch;
+    private float timeToWait = 5, currTimeToWaitplayer, currTimetoStartMatch;
     private bool isStartGame;
     public static int selectedPlayer;
     private int selectedButton;
@@ -76,9 +76,9 @@ public class LobbyController : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings();
         }
 
-        if ((PhotonNetwork.PlayerList.Length >= 4) && isStartGame) photonView.RPC("StartGame", RpcTarget.AllBuffered);
+        if (PhotonNetwork.PlayerList.Length >= 4) StartGame();
 
-        if (isStartGame) photonView.RPC("StartGame", RpcTarget.AllBuffered);
+        if (isStartGame) photonView.RPC("StartgameTimer", RpcTarget.AllBuffered);
 
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
@@ -135,29 +135,21 @@ public class LobbyController : MonoBehaviourPunCallbacks
         PhotonNetwork.CreateRoom("Room" + randomRoomNumber, roomOptions);
     }
 
-    [PunRPC]
     private void StartGame()
     {
-        if (currTimeToWaitplayer <= 0)
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.CurrentRoom.IsOpen = false;
-            PhotonNetwork.CurrentRoom.IsVisible = false;
-            if (PhotonNetwork.IsMasterClient)
-            {
-                photonView.RPC("PlayerSelectPanel", RpcTarget.AllBuffered);
-            }
-            else
-            {
-                mainPanel.SetActive(false);
-                changeNamePanel.SetActive(false);
-                playerJoinedPanel.SetActive(false);
-                loadingPanel.SetActive(true);
-            }
+            photonView.RPC("PlayerSelectPanel", RpcTarget.AllBuffered);
         }
-        else currTimeToWaitplayer -= Time.deltaTime;
-
-        msgTextPlayerJoined.gameObject.SetActive(true);
-        msgTextPlayerJoined.text = "Estimated time " + (int)currTimeToWaitplayer;
+        else
+        {
+            mainPanel.SetActive(false);
+            changeNamePanel.SetActive(false);
+            playerJoinedPanel.SetActive(false);
+            loadingPanel.SetActive(true);
+        }
     }
 
     [PunRPC]
@@ -228,6 +220,17 @@ public class LobbyController : MonoBehaviourPunCallbacks
             }
         }
     }
+
+    [PunRPC]
+    private void StartgameTimer()
+    {
+        if (currTimeToWaitplayer <= 0) StartGame();
+        else currTimeToWaitplayer -= Time.deltaTime;
+
+        msgTextPlayerJoined.gameObject.SetActive(true);
+        msgTextPlayerJoined.text = "Estimated time " + (int)currTimeToWaitplayer;
+    }
+
     #endregion Game
 
 
