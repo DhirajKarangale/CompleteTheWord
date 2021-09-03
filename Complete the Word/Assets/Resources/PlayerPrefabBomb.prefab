@@ -1410,8 +1410,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   photonView: {fileID: 1751071716}
   granedePrefab: {fileID: 1730830273145113863, guid: 49acacadc8846af4084f889075865fbb, type: 3}
+  playerMovement: {fileID: 2385995622912864346}
   player: {fileID: 4747807312964376384}
-  throwForce: 22
+  throwForce: 25
   throwTime: 7
   timeCounterText: {fileID: 6598978660928641792}
 --- !u!114 &1751071716
@@ -8228,16 +8229,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 749963446100422984}
+  wall: {fileID: 0}
   gameCanvas: {fileID: 8800903537866838489}
   winPS: {fileID: 8023041891810714940}
   effectArea: 6
-  explosionForce: 110000
+  explosionForce: 0
+  isSleep: 0
+  granedeThrowForceMultiplier: 0
   rigidBody: {fileID: 3281072968430998983}
   body: {fileID: 4747807312964376384}
   animator: {fileID: 8166906208939125923}
   speed: 0.001
   checkSpherePos: {fileID: 8023041891241476773}
-  checkRadius: 0.1
+  checkRadius: 0.6
   ground:
     serializedVersion: 2
     m_Bits: 8

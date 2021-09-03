@@ -1583,7 +1583,7 @@ MonoBehaviour:
   hammerThrow: {fileID: 21300000, guid: 58d16747776f5df4585a6c9b94652f2f, type: 3}
   hammerCatch: {fileID: 21300000, guid: 482a6986d72e355489bdf5fc3fc06648, type: 3}
   hammerThrowCatchButton: {fileID: 992209219}
-  throwForce: 25
+  throwForce: 30
 --- !u!1 &3377200859609083528
 GameObject:
   m_ObjectHideFlags: 0
@@ -7456,7 +7456,7 @@ GameObject:
   - component: {fileID: 5972456720150351969}
   m_Layer: 6
   m_Name: PlayerPrefabHammer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7564,16 +7564,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 2845026260732984318}
+  wall: {fileID: 0}
   gameCanvas: {fileID: 1919433371}
   winPS: {fileID: 4775053238955601802}
   effectArea: 6
   explosionForce: 110000
+  isSleep: 0
   rigidBody: {fileID: 43701136502628209}
   body: {fileID: 7849895166575648246}
   animator: {fileID: 6648819818634798613}
   speed: 0.001
   checkSpherePos: {fileID: 6680517585910268836}
-  checkRadius: 0.1
+  checkRadius: 0.6
   ground:
     serializedVersion: 2
     m_Bits: 8

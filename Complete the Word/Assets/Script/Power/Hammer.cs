@@ -40,11 +40,12 @@ public class Hammer : MonoBehaviour
             }
             else
             {
-                Reset();
+                photonView.RPC("Reset", RpcTarget.AllBuffered);
             }
         }
     }
 
+    [PunRPC]
     private void Throw()
     {
         boxCollider.isTrigger = false;
@@ -56,6 +57,7 @@ public class Hammer : MonoBehaviour
         rigidBody.AddForce(player.transform.TransformDirection(Vector3.forward) * throwForce, ForceMode.Impulse);
     }
 
+    [PunRPC]
     private void Return()
     {
         isThrow = false;
@@ -75,6 +77,7 @@ public class Hammer : MonoBehaviour
         return p;
     }
 
+    [PunRPC]
     private void Reset()
     {
         transform.localScale = orgScale;
@@ -92,15 +95,15 @@ public class Hammer : MonoBehaviour
     {
         if (!photonView.IsMine) return;
 
-        if (isThrow) Return();
-        else Throw();
+        if (isThrow) photonView.RPC("Return", RpcTarget.AllBuffered);
+        else photonView.RPC("Throw", RpcTarget.AllBuffered);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == 7)
         {
-            collision.gameObject.GetComponent<PlayerMovement>().photonView.RPC("HammerCollide", RpcTarget.All);
+            collision.gameObject.GetComponent<PlayerMovement>().photonView.RPC("HammerCollide", RpcTarget.AllBuffered);
         }
     }
 }

@@ -5383,7 +5383,7 @@ MonoBehaviour:
   animator: {fileID: 2162079642655366998}
   speed: 0.001
   checkSpherePos: {fileID: 78311760}
-  checkRadius: 0.1
+  checkRadius: 0.6
   ground:
     serializedVersion: 2
     m_Bits: 8

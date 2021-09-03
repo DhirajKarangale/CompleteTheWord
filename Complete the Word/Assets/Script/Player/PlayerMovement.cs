@@ -4,12 +4,13 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public PhotonView photonView;
+    [SerializeField] Wall wall;
     [SerializeField] GameObject gameCanvas;
     [SerializeField] ParticleSystem winPS;
     [SerializeField] float effectArea;
     [SerializeField] float explosionForce;
     private int sleepTime = 10;
-    private bool isSleep;
+    public bool isSleep;
 
     [Header("Movement")]
     public Rigidbody rigidBody;
@@ -75,20 +76,20 @@ public class PlayerMovement : MonoBehaviour
                 if (rightFingerId != -1) LookAround();
 
                 // Setting Animation
-                if (!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+                if ((oldPos == transform.position) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+                {
+                    animator.SetBool("isRun", true);
+                    animator.SetBool("isWin", false);
+                    animator.SetBool("isLoose", false);
+                    animator.SetBool("isJump", false);
+                }
+                else if (!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
                 {
                     animator.SetBool("isRun", false);
                     animator.SetBool("isWin", false);
                     animator.SetBool("isLoose", false);
                     animator.SetBool("isJump", true);
                     animator.Play("Jump", -1, 0);
-                }
-                else if ((oldPos == transform.position) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
-                {
-                    animator.SetBool("isRun", true);
-                    animator.SetBool("isWin", false);
-                    animator.SetBool("isLoose", false);
-                    animator.SetBool("isJump", false);
                 }
                 else
                 {
@@ -234,6 +235,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!photonView.IsMine) return;
         if (isSleep) return;
+        if (wall != null)
+        {
+            if (wall.isWallUp) return;
+        }
 
         isSleep = true;
 
@@ -250,6 +255,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!photonView.IsMine) return;
         if (isSleep) return;
+        if(wall != null)
+        {
+            if (wall.isWallUp) return;
+        }
 
         rigidBody.AddExplosionForce(explosionForce, transform.position + new Vector3(Random.Range(0,2),0,Random.Range(0,2)), effectArea);
     }

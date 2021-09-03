@@ -70,6 +70,11 @@ MonoBehaviour:
   - SetRemainingPlayer
   - PlayerSelectTimer
   - AddExplosionForce
+  - DownWall
+  - UpWall
+  - Reset
+  - Return
+  - Throw
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

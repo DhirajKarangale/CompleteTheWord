@@ -1200,7 +1200,7 @@ GameObject:
   - component: {fileID: 799153145}
   - component: {fileID: 799153148}
   m_Layer: 5
-  m_Name: Player Button
+  m_Name: WallPlayer Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1302,7 +1302,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e2c4d60c2ca66874692e5e53e434e5c5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c387a7c3cda3c914191c8cdf8b81eb04, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
