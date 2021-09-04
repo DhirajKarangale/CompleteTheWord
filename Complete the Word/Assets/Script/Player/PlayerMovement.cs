@@ -4,13 +4,12 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public PhotonView photonView;
-    [SerializeField] Wall wall;
     [SerializeField] GameObject gameCanvas;
     [SerializeField] ParticleSystem winPS;
     [SerializeField] float effectArea;
     [SerializeField] float explosionForce;
-    private int sleepTime = 10;
-    public bool isSleep;
+    [SerializeField] PowerEffect powerEffect;
+  
 
     [Header("Movement")]
     public Rigidbody rigidBody;
@@ -64,7 +63,49 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (!isSleep)
+            if (powerEffect != null)
+            {
+                if (!powerEffect.isSleep)
+                {
+                    rigidBody.isKinematic = false;
+
+                    GetTouchInput();
+
+                    if (leftFingerId != -1) Move();
+                    // else rigidBody.velocity = Vector3.zero;
+
+                    if (rightFingerId != -1) LookAround();
+
+                    // Setting Animation
+                    if ((oldPos == transform.position) && Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+                    {
+                        animator.SetBool("isRun", true);
+                        animator.SetBool("isWin", false);
+                        animator.SetBool("isLoose", false);
+                        animator.SetBool("isJump", false);
+                    }
+                    else if (!Physics.CheckSphere(checkSpherePos.position, checkRadius, ground))
+                    {
+                        animator.SetBool("isRun", false);
+                        animator.SetBool("isWin", false);
+                        animator.SetBool("isLoose", false);
+                        animator.SetBool("isJump", true);
+                        animator.Play("Jump", -1, 0);
+                    }
+                    else
+                    {
+                        animator.SetBool("isRun", false);
+                        animator.SetBool("isWin", false);
+                        animator.SetBool("isLoose", false);
+                        animator.SetBool("isJump", false);
+                    }
+                }
+                else
+                {
+                    rigidBody.isKinematic = true;
+                }
+            }
+            else
             {
                 rigidBody.isKinematic = false;
 
@@ -98,10 +139,6 @@ public class PlayerMovement : MonoBehaviour
                     animator.SetBool("isLoose", false);
                     animator.SetBool("isJump", false);
                 }
-            }
-            else
-            {
-                rigidBody.isKinematic = true;
             }
         }
     }
@@ -227,44 +264,52 @@ public class PlayerMovement : MonoBehaviour
     {
       if (!photonView.IsMine) return;
 
+        if (powerEffect != null)
+        {
+            if (powerEffect.isSleep) return;
+        }
+
       if(Physics.CheckSphere(checkSpherePos.position,checkRadius,ground)) rigidBody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
-
+/*
     [PunRPC]
     public void HammerCollide()
     {
-        if (!photonView.IsMine) return;
-        if (isSleep) return;
-        if (wall != null)
+        if (this.gameObject.layer == 7)
         {
-            if (wall.isWallUp) return;
+            if (!photonView.IsMine) return;
+            if (isSleep) return;
+            if (wall != null)
+            {
+                if (wall.isWallUp) return;
+            }
+
+            isSleep = true;
+
+            animator.SetBool("isRun", false);
+            animator.SetBool("isWin", false);
+            animator.SetBool("isLoose", true);
+            animator.SetBool("isJump", false);
+
+            Invoke("SetSleepFalse", sleepTime);
         }
-
-        isSleep = true;
-
-        animator.SetBool("isRun", false);
-        animator.SetBool("isWin", false);
-        animator.SetBool("isLoose", true);
-        animator.SetBool("isJump", false);
-
-        Invoke("SetSleepFalse", sleepTime);
-    }
+       
+    }*/
 
     [PunRPC]
     private void AddExplosionForce()
     {
         if (!photonView.IsMine) return;
-        if (isSleep) return;
-        if(wall != null)
+        if(powerEffect != null)
         {
-            if (wall.isWallUp) return;
+            if (powerEffect.wall.isWallUp || powerEffect.isSleep) return;
         }
 
         rigidBody.AddExplosionForce(explosionForce, transform.position + new Vector3(Random.Range(0,2),0,Random.Range(0,2)), effectArea);
     }
 
-    private void SetSleepFalse()
+   /* private void SetSleepFalse()
     {
         isSleep = false;
-    }
+    }*/
 }

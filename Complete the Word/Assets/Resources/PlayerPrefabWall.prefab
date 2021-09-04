@@ -5383,6 +5383,7 @@ GameObject:
   - component: {fileID: 5663034934921137225}
   - component: {fileID: 1187397871566530244}
   - component: {fileID: 1187397871566530245}
+  - component: {fileID: 1554760712094516737}
   m_Layer: 6
   m_Name: PlayerPrefabWall
   m_TagString: Player
@@ -5494,12 +5495,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 7341854631960923483}
-  wall: {fileID: 1187397871566530245}
   gameCanvas: {fileID: 1560762284203683274}
   winPS: {fileID: 62052261407562031}
   effectArea: 6
   explosionForce: 110000
-  isSleep: 0
+  powerEffect: {fileID: 1554760712094516737}
   rigidBody: {fileID: 4756734001739655636}
   body: {fileID: 3344063172293159763}
   animator: {fileID: 2224017117726773424}
@@ -5551,12 +5551,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   photonView: {fileID: 7341854631960923483}
   walls: {fileID: 6400299520180728127}
+  powerEffect: {fileID: 1554760712094516737}
   timerText: {fileID: 6400299519095974804}
   wallUpTimerText: {fileID: 6400299519880478606}
   desableTime: 60
   wallDownTime: 45
   isWallUp: 0
   isWallAllowed: 0
+--- !u!114 &1554760712094516737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187397871566530247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543676a428eb83f4798843fa9d1a1a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  photonView: {fileID: 7341854631960923483}
+  animator: {fileID: 2224017117726773424}
+  wall: {fileID: 1187397871566530245}
+  isSleep: 0
 --- !u!1 &1433495579375501031
 GameObject:
   m_ObjectHideFlags: 0

@@ -1410,7 +1410,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   photonView: {fileID: 1751071716}
   granedePrefab: {fileID: 1730830273145113863, guid: 49acacadc8846af4084f889075865fbb, type: 3}
-  playerMovement: {fileID: 2385995622912864346}
+  powerEffect: {fileID: 8443873575541790625}
   player: {fileID: 4747807312964376384}
   throwForce: 25
   throwTime: 7
@@ -8119,6 +8119,7 @@ GameObject:
   - component: {fileID: 749963446100422984}
   - component: {fileID: 2385995622912864346}
   - component: {fileID: 9219319473084209879}
+  - component: {fileID: 8443873575541790625}
   m_Layer: 6
   m_Name: PlayerPrefabBomb
   m_TagString: Player
@@ -8229,13 +8230,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   photonView: {fileID: 749963446100422984}
-  wall: {fileID: 0}
   gameCanvas: {fileID: 8800903537866838489}
   winPS: {fileID: 8023041891810714940}
   effectArea: 6
   explosionForce: 0
-  isSleep: 0
-  granedeThrowForceMultiplier: 0
+  powerEffect: {fileID: 8443873575541790625}
   rigidBody: {fileID: 3281072968430998983}
   body: {fileID: 4747807312964376384}
   animator: {fileID: 8166906208939125923}
@@ -8273,3 +8272,19 @@ MonoBehaviour:
   - {fileID: 1155559501796563134}
   - {fileID: 3841907237510842467}
   wordCanvas: {fileID: 8814100970574643679}
+--- !u!114 &8443873575541790625
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9219319473084209876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543676a428eb83f4798843fa9d1a1a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  photonView: {fileID: 749963446100422984}
+  animator: {fileID: 8166906208939125923}
+  wall: {fileID: 0}
+  isSleep: 0

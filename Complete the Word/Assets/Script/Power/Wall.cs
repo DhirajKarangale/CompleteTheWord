@@ -6,6 +6,7 @@ public class Wall : MonoBehaviour
 {
     [SerializeField] PhotonView photonView;
     [SerializeField] GameObject walls;
+    [SerializeField] PowerEffect powerEffect;
     [SerializeField] Text timerText;
     [SerializeField] Text wallUpTimerText;
     [SerializeField] float desableTime, wallDownTime;
@@ -68,7 +69,7 @@ public class Wall : MonoBehaviour
     public void WallButton()
     {
         if (!photonView.IsMine) return;
-        if (!isWallAllowed) return;
+        if (!isWallAllowed || powerEffect.isSleep) return;
 
         if (isWallUp) photonView.RPC("DownWall", RpcTarget.AllBuffered);
         else photonView.RPC("UpWall", RpcTarget.AllBuffered);

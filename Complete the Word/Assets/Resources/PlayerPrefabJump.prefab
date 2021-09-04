@@ -5264,6 +5264,7 @@ GameObject:
   - component: {fileID: 7295820196180902589}
   - component: {fileID: 5641691431291028399}
   - component: {fileID: 1199655290265053474}
+  - component: {fileID: 1055010010549039376}
   m_Layer: 6
   m_Name: PlayerPrefabJump
   m_TagString: Player
@@ -5378,6 +5379,7 @@ MonoBehaviour:
   winPS: {fileID: 643339977}
   effectArea: 6
   explosionForce: 110000
+  powerEffect: {fileID: 1055010010549039376}
   rigidBody: {fileID: 4818610174738261554}
   body: {fileID: 3365327530395591861}
   animator: {fileID: 2162079642655366998}
@@ -5415,6 +5417,22 @@ MonoBehaviour:
   - {fileID: 9177998666743769931}
   - {fileID: 6487048584821357462}
   wordCanvas: {fileID: 1515012904329097770}
+--- !u!114 &1055010010549039376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1199655290265053473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 543676a428eb83f4798843fa9d1a1a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  photonView: {fileID: 7295820196180902589}
+  animator: {fileID: 2162079642655366998}
+  wall: {fileID: 0}
+  isSleep: 0
 --- !u!1 &1204211553044443567
 GameObject:
   m_ObjectHideFlags: 0

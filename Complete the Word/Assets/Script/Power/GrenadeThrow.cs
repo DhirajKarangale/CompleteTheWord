@@ -6,7 +6,7 @@ public class GrenadeThrow : MonoBehaviour
 {
     [SerializeField] PhotonView photonView;
     [SerializeField] GameObject granedePrefab;
-    [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] PowerEffect powerEffect;
     [SerializeField] Transform player;
     [SerializeField] float throwForce;
     [SerializeField] float throwTime;
@@ -59,7 +59,7 @@ public class GrenadeThrow : MonoBehaviour
     public void GranedeThrowButton()
     {
         if (!photonView.IsMine) return;
-        if (playerMovement.isSleep) return;
+        if (powerEffect.isSleep) return;
 
         isGranedeThrow = true;
     }

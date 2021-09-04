@@ -103,7 +103,7 @@ public class Hammer : MonoBehaviour
     {
         if (collision.gameObject.layer == 7)
         {
-            collision.gameObject.GetComponent<PlayerMovement>().photonView.RPC("HammerCollide", RpcTarget.AllBuffered);
+            collision.gameObject.GetComponent<PowerEffect>().photonView.RPC("HammerCollide", RpcTarget.AllBuffered);
         }
     }
 }
