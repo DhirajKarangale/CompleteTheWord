@@ -48,6 +48,7 @@ public class Hammer : MonoBehaviour
     [PunRPC]
     private void Throw()
     {
+        transform.localScale = orgScale;
         boxCollider.isTrigger = false;
         isThrow = true;
         isReturning = false;
@@ -103,7 +104,9 @@ public class Hammer : MonoBehaviour
     {
         if (collision.gameObject.layer == 7)
         {
-            collision.gameObject.GetComponent<PowerEffect>().photonView.RPC("HammerCollide", RpcTarget.AllBuffered);
+            PowerEffect powerEffect = collision.gameObject.GetComponent<PowerEffect>();
+            
+            if(powerEffect != null) powerEffect.photonView.RPC("HammerCollide", RpcTarget.AllBuffered);
         }
     }
 }

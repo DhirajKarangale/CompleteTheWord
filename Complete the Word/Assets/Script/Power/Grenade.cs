@@ -30,7 +30,8 @@ public class Grenade : MonoBehaviourPunCallbacks
         {
             if (nearByObject.gameObject.layer == 7)
             {
-                nearByObject.gameObject.GetComponent<PlayerMovement>().photonView.RPC("AddExplosionForce", RpcTarget.All);
+                PlayerMovement playerMovement = nearByObject.gameObject.GetComponent<PlayerMovement>();
+                if(playerMovement != null) playerMovement.photonView.RPC("AddExplosionForce", RpcTarget.All);
             }
         }
         Destroy(gameObject);
