@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float effectArea;
     [SerializeField] float explosionForce;
     [SerializeField] PowerEffect powerEffect;
+    [SerializeField] Wall wall;
 
 
     [Header("Movement")]
@@ -74,6 +75,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnDestroy()
     {
+        if(!photonView.IsMine) return;
         winPS.Stop();
     }
 
@@ -243,7 +245,11 @@ public class PlayerMovement : MonoBehaviour
         if (!photonView.IsMine) return;
         if (powerEffect != null)
         {
-            if (powerEffect.wall.isWallUp || powerEffect.isSleep) return;
+            if (powerEffect.isSleep) return;
+        }
+        if(wall != null)
+        {
+            if(wall.isWallUp) return;
         }
 
         rigidBody.AddExplosionForce(explosionForce, transform.position + new Vector3(Random.Range(0, 2), 0, Random.Range(0, 2)), effectArea);

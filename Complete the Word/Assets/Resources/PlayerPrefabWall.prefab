@@ -5500,6 +5500,7 @@ MonoBehaviour:
   effectArea: 6
   explosionForce: 110000
   powerEffect: {fileID: 1554760712094516737}
+  wall: {fileID: 1187397871566530245}
   rigidBody: {fileID: 4756734001739655636}
   body: {fileID: 3344063172293159763}
   animator: {fileID: 2224017117726773424}
@@ -8511,14 +8512,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.4716981, g: 0.4716981, b: 0.4716981, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cc74f920e851c6044bf30d757f42ebfd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 877951e9f6b3d5b4fb9d25da4ae3bb60, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8550,7 +8551,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.49056602, g: 0.24759701, b: 0.24759701, a: 1}
+    m_HighlightedColor: {r: 1, g: 0, b: 0, a: 1}
     m_PressedColor: {r: 0.5283019, g: 0.29654682, b: 0.29654682, a: 1}
     m_SelectedColor: {r: 0.509434, g: 0.17061234, b: 0.17061234, a: 1}
     m_DisabledColor: {r: 0.4056604, g: 0.2047437, b: 0.2047437, a: 0.5019608}

@@ -45,6 +45,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
         changeNamePanel.SetActive(false);
         playerJoinedPanel.SetActive(false);
         playerSelectPanel.SetActive(false);
+        loadingPanel.SetActive(false);
 
         battelButton.SetActive(false);
         cancelButton.SetActive(false);
@@ -112,7 +113,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
 
         mainPanel.SetActive(false);
+        changeNamePanel.SetActive(false);
         playerJoinedPanel.SetActive(true);
+        loadingPanel.SetActive(false);
+        playerSelectPanel.SetActive(false);
         if (PhotonNetwork.IsMasterClient) isStartGame = true;
     }
 
@@ -265,7 +269,10 @@ public class LobbyController : MonoBehaviourPunCallbacks
         cancelButton.SetActive(false);
         PhotonNetwork.LeaveRoom();
         mainPanel.SetActive(true);
+        changeNamePanel.SetActive(false);
         playerJoinedPanel.SetActive(false);
+        loadingPanel.SetActive(false);
+        playerSelectPanel.SetActive(false);
     }
 
     public void QuitButton()
@@ -298,7 +305,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         selectedPlayer = 1;
         photonView.RPC("HammerPlayerSelectButtonRPC", RpcTarget.AllBuffered);
-       
+
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;
@@ -308,7 +315,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         selectedPlayer = 2;
         photonView.RPC("GranedePlayerSelectButtonRPC", RpcTarget.AllBuffered);
-       
+
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;
@@ -318,7 +325,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         selectedPlayer = 3;
         photonView.RPC("PlayerSelectButtonRPC", RpcTarget.AllBuffered);
-     
+
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;
@@ -328,7 +335,7 @@ public class LobbyController : MonoBehaviourPunCallbacks
     {
         selectedPlayer = 4;
         photonView.RPC("JumpPlayerSelectButtonRPC", RpcTarget.AllBuffered);
-       
+
         for (int i = 0; i < playerSelectButtons.Length; i++)
         {
             playerSelectButtons[i].interactable = false;

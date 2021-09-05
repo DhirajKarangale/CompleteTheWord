@@ -5380,6 +5380,7 @@ MonoBehaviour:
   effectArea: 6
   explosionForce: 110000
   powerEffect: {fileID: 1055010010549039376}
+  wall: {fileID: 0}
   rigidBody: {fileID: 4818610174738261554}
   body: {fileID: 3365327530395591861}
   animator: {fileID: 2162079642655366998}
