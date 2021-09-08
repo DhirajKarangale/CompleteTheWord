@@ -25,8 +25,12 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] LayerMask ground;
     [SerializeField] float jumpForce;
 
+    [Header("Camera Follow")]
+    [SerializeField] Vector3 offset;
+    private float smoothSpeed = 0.125f;
+    private Transform cam;
+
     [Header("Look")]
-    [SerializeField] Camera cam;
     public float sensitivity;
     private int leftFingerId, rightFingerId;
     private float halfScreenWidth;
@@ -39,18 +43,21 @@ public class PlayerMovement : MonoBehaviour
         if (!photonView.IsMine)
         {
             gameObject.layer = 7;
-            cam.enabled = false;
+            //  cam.enabled = false;
             this.enabled = false;
             gameCanvas.SetActive(false);
             return;
         }
 
+        cam = FindObjectOfType<Camera>().transform;
         gameCanvas.SetActive(true);
         winPS.Stop();
         leftFingerId = -1;
         rightFingerId = -1;
         halfScreenWidth = Screen.width / 2;
         oldPos = transform.position;
+
+        CameraFollow();
     }
 
     private void Update()
@@ -71,6 +78,8 @@ public class PlayerMovement : MonoBehaviour
             }
             else BasicControl();
         }
+
+        CameraFollow();
     }
 
     private void OnDestroy()
@@ -220,11 +229,22 @@ public class PlayerMovement : MonoBehaviour
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             body.rotation = Quaternion.Euler(0, targetAngle, 0);
         }
+
+        CameraFollow();
     }
 
     private void LookAround()
     {
         transform.Rotate(Vector3.up * lookInput.x * sensitivity);
+        cam.LookAt(transform);
+    }
+
+    private void CameraFollow()
+    {
+        Vector3 desiredPos = transform.position + offset;
+        Vector3 smoothPos = Vector3.Lerp(cam.position, desiredPos, smoothSpeed);
+        cam.position = smoothPos;
+        cam.LookAt(transform);
     }
 
     public void JumpButton()

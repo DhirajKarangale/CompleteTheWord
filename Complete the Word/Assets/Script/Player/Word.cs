@@ -18,6 +18,7 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
     [Header("UI")]
     [SerializeField] GameObject gamePanel;
     [SerializeField] Text playerNameText;
+    [SerializeField] Text playerNameUIText;
     [SerializeField] Text[] texts;
     [SerializeField] Image[] wordBG;
     [SerializeField] GameObject wordCanvas;
@@ -27,6 +28,8 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
     private void Start()
     {
         if (!photonView.IsMine) return;
+
+        playerNameUIText.text = PhotonNetwork.NickName;
 
         // Desable All Text BG
         for (int i = 0; i < wordBG.Length; i++)

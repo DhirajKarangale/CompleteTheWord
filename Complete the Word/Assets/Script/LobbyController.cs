@@ -140,11 +140,11 @@ public class LobbyController : MonoBehaviourPunCallbacks
 
     private void StartGame()
     {
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
         if (PhotonNetwork.IsMasterClient)
         {
-            photonView.RPC("PlayerSelectTimer", RpcTarget.AllBuffered);
+            photonView.RPC("PlayerSelectTimer", RpcTarget.All);
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
         }
         else
         {
