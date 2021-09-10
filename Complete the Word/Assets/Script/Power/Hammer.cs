@@ -6,14 +6,14 @@ public class Hammer : MonoBehaviour
 {
     [SerializeField] PhotonView photonView;
     [SerializeField] Rigidbody rigidBody;
-    [SerializeField] Camera cam;
     [SerializeField] BoxCollider boxCollider;
+    [SerializeField] GameObject collisionEffect;
     [SerializeField] Transform player;
     [SerializeField] Transform container, curvePoint;
     [SerializeField] Sprite hammerThrow, hammerCatch;
     [SerializeField] Button hammerThrowCatchButton;
     private Vector3 oldPosition,orgScale;
-    private bool isReturning, isThrow;
+    private bool isReturning, isThrow, collisionEffectAllow;
     [SerializeField] float throwForce;
     private float time = 0;
 
@@ -108,5 +108,25 @@ public class Hammer : MonoBehaviour
             
             if(powerEffect != null) powerEffect.photonView.RPC("HammerCollide", RpcTarget.AllBuffered);
         }
+    }
+
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collisionEffectAllow && (!collision.gameObject.CompareTag("ABC")))
+        {
+            collisionEffectAllow = false;
+            Destroy(PhotonNetwork.Instantiate("CollisionEffect", collision.GetContact(0).point, Quaternion.identity), 0.4f);
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        Invoke("SetCollision", 1);
+    }
+
+    private void SetCollision()
+    {
+        collisionEffectAllow = true;
     }
 }

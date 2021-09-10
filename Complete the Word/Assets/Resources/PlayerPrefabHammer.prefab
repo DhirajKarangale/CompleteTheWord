@@ -1137,7 +1137,7 @@ Transform:
   m_GameObject: {fileID: 2768077267914740376}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 13.68, y: 0.94, z: -3.4}
-  m_LocalScale: {x: 3.5, y: 3.5, z: 3.5}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 1763207862942473996}
   - {fileID: 4612053575147094525}
@@ -8112,15 +8112,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   photonView: {fileID: 3080674288781409859}
   rigidBody: {fileID: 6509522718652826876}
-  cam: {fileID: 0}
   boxCollider: {fileID: 6509522718652826877}
+  collisionEffect: {fileID: 6198003379055463540, guid: dea8fd32e0f7d9844b90c9824dd1674a, type: 3}
   player: {fileID: 1763207862942473996}
   container: {fileID: 6509522717368109788}
   curvePoint: {fileID: 6509522718079849997}
   hammerThrow: {fileID: 21300000, guid: 58d16747776f5df4585a6c9b94652f2f, type: 3}
   hammerCatch: {fileID: 21300000, guid: 482a6986d72e355489bdf5fc3fc06648, type: 3}
   hammerThrowCatchButton: {fileID: 8397034234517351353}
-  throwForce: 25
+  throwForce: 15
 --- !u!1 &6579529015610449443
 GameObject:
   m_ObjectHideFlags: 0

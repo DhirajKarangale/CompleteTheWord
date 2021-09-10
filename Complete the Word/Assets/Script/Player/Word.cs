@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class Word : MonoBehaviourPunCallbacks ,IPunObservable
 {
     [Header("Word")]
-   // private static string[] words = { "Bad", "Good", "Nice", "Home", "Help", "Hard", "Easy", "Had", "Mad", "Hat" };
     private static string[] words = {"Game", "Bad", "Good", "Nice", "Home","Had", "Mad","Joke","Neck"};
     private string currWord;
     private bool isCollisionExit;

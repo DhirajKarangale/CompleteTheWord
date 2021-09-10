@@ -15,12 +15,12 @@ public class ABCCube : MonoBehaviour
 
     private void OnCollisionStay(Collision collision)
     {
-        photonView.RPC("PlayerCollideABCCube", RpcTarget.AllBuffered); 
+       if(collision.gameObject.CompareTag("Player")) photonView.RPC("PlayerCollideABCCube", RpcTarget.AllBuffered); 
     }
 
     private void OnCollisionExit(Collision collision)
     {
-       photonView.RPC("PlayerExitABCCube", RpcTarget.AllBuffered);
+        if (collision.gameObject.CompareTag("Player")) photonView.RPC("PlayerExitABCCube", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
