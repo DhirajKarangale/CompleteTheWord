@@ -59,20 +59,20 @@ public class Word : MonoBehaviourPunCallbacks ,IPunObservable
         if (!PhotonNetwork.IsMasterClient) SetSimilarWordToClient();
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (photonView.IsMine && collision.gameObject.CompareTag("ABC") && (wordCounter < currWord.Length) && isCollisionExit && (currWord[wordCounter].ToString().ToUpper() == collision.gameObject.transform.name))
+        if (photonView.IsMine && other.gameObject.CompareTag("ABC") && (wordCounter < currWord.Length) && isCollisionExit && (currWord[wordCounter].ToString().ToUpper() == other.gameObject.transform.name))
         {
             photonView.RPC("PlayreCollideWord", RpcTarget.AllBuffered);
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
         if (!photonView.IsMine) return;
         photonView.RPC("PlayerExitWordCollision", RpcTarget.AllBuffered);
     }
-
+  
     #endregion Unity
 
 

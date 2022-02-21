@@ -77,8 +77,6 @@ public class LobbyController : MonoBehaviourPunCallbacks
             PhotonNetwork.ConnectUsingSettings();
         }
 
-        if (PhotonNetwork.PlayerList.Length >= 4) StartGame();
-
         if (isStartGame) photonView.RPC("StartgameTimer", RpcTarget.AllBuffered);
     }
 

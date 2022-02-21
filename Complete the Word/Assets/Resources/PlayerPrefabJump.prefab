@@ -703,7 +703,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   jumpForce: 500
-  offset: {x: 10, y: 9, z: 0}
+  offset: {x: 5.5, y: 6.68, z: 0}
+  rotationOffset: {x: 34.26, y: -90, z: 0}
   sensitivity: 3
 --- !u!114 &575538332081228153
 MonoBehaviour:
@@ -6011,10 +6012,10 @@ RectTransform:
   m_Father: {fileID: 6368711367615508209}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 719.9752, y: -354.95264}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -109, y: 133}
+  m_SizeDelta: {x: 170, y: 170}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1682852235797357430
 CanvasRenderer:

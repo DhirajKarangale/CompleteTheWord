@@ -27,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Camera Follow")]
     [SerializeField] Vector3 offset;
+    [SerializeField] Vector3 rotationOffset;
     private float smoothSpeed = 0.125f;
     private Transform cam;
 
@@ -244,7 +245,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 desiredPos = transform.position + offset;
         Vector3 smoothPos = Vector3.Lerp(cam.position, desiredPos, smoothSpeed);
         cam.position = smoothPos;
-        cam.LookAt(transform);
+        cam.rotation = Quaternion.Euler(rotationOffset);
+     //   cam.LookAt(transform);
     }
 
     public void JumpButton()
